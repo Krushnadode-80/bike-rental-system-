@@ -1,0 +1,81 @@
+=========================================================
+BIKE RENTAL SYSTEM - PROJECT STRUCTURE & ARCHITECTURE FLOW
+=========================================================
+
+This document provides a complete architectural flow and structure of the Bike Rental System Backend.
+The application follows a modern, modular design pattern (often called MVC or Controller-Service-Repository pattern).
+
+---------------------------------------------------------
+1. TECHNOLOGY STACK
+---------------------------------------------------------
+* Framework: FastAPI
+* Database: PostgreSQL
+* ORM: SQLAlchemy
+* Authentication: JWT (JSON Web Tokens), OAuth2PasswordBearer, passlib (bcrypt)
+* Data Validation: Pydantic
+
+---------------------------------------------------------
+2. PROJECT STRUCTURE OVERVIEW
+---------------------------------------------------------
+The code is logically separated into different folders based on their responsibilities:
+
+backend/
+|-- main.py                 # The Entry Point & API App Initialization
+|
+|-- database/
+|   `-- database.py         # DB Connection & Session Management
+|
+|-- models/                 # SQLAlchemy Models (Database Tables)
+|   |-- user_model.py       # Defines 'users' table
+|   |-- bike_model.py       # Defines 'bikes' table
+|   `-- booking_model.py    # Defines 'bookings' table
+|
+|-- schemas/                # Pydantic Schemas (Data Validation)
+|   |-- user_schema.py      # Input/Output validation for Users
+|   |-- bike_schema.py      # Input/Output validation for Bikes
+|   `-- booking_schema.py   # Input/Output validation for Bookings
+|
+|-- auth/
+|   `-- auth_handler.py     # Security logic (JWT token creation, Password Hashing)
+|
+`-- routes/                 # API Endpoints (Controllers)
+    |-- auth_routes.py      # Register, Login, Current User APIs
+    |-- bike_routes.py      # CRUD for Bikes, Searching, Filtering APIs
+    |-- booking_routes.py   # Book Bike, Cancel Booking, User History APIs
+    `-- dashboard_routes.py # Admin Dashboard Stats APIs (Revenue, Totals)
+
+---------------------------------------------------------
+3. THE FLOW OF DATA (How a request is processed)
+---------------------------------------------------------
+When a user interacts with the API (for example, trying to Book a Bike), here is exactly what happens under the hood step-by-step:
+
+Step 1: The Request Arrives (main.py)
+- The user sends an HTTP request (e.g., POST /book-bike).
+- main.py receives it. Because we connected our routers using app.include_router(), FastAPI knows to forward this request to the specific file (booking_routes.py).
+
+Step 2: Security Check (auth/auth_handler.py)
+- If the route is protected (has `Depends(verify_token)`), FastAPI intercepts the request.
+- It extracts the JWT Token from the headers, verifies the signature, and checks if the token is expired. If invalid or missing, it blocks the user with a 401 error.
+
+Step 3: Data Validation (schemas/)
+- Before executing the business logic, FastAPI looks at the Pydantic schema (e.g., BookingCreate).
+- It checks the incoming JSON body: Did they provide a user_id? Is total_price an integer?
+- If the data is wrong, FastAPI automatically returns a 422 Unprocessable Entity error.
+
+Step 4: Business Logic & Database Queries (routes/ & database.py)
+- FastAPI opens a database connection using Depends(get_db).
+- The route logic runs: It queries the database using SQLAlchemy (e.g., checking if Bike.availability == 'available').
+- If valid, it creates a new entry and updates existing rows (e.g., changing bike availability to 'not available').
+- db.commit() saves these changes permanently to the PostgreSQL database.
+
+Step 5: Response Sent Back
+- The route returns a Python dictionary (e.g., {"message": "Bike Booked Successfully"}).
+- FastAPI automatically converts this dictionary into JSON and sends it back to the user.
+
+---------------------------------------------------------
+4. KEY FEATURES BUILT
+---------------------------------------------------------
+* Authentication System: Secure user registration and login using salted password hashing (Bcrypt) and secure JWT tokens.
+* Smart Booking Logic: Prevents double-booking by checking availability, automatically updates bike statuses, and calculates revenue.
+* Advanced Filtering: Users can search bikes by name, filter by brand, and filter by dynamic price ranges.
+* Admin Dashboard: A centralized endpoint that aggregates data across multiple tables to calculate Total Revenue, Active Users, and Fleet Availability.

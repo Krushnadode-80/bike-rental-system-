@@ -1,0 +1,12 @@
+Alembic migration setup for the backend.
+
+Common commands:
+
+1. Create a new migration
+   alembic revision --autogenerate -m "describe change"
+
+2. Apply migrations
+   alembic upgrade head
+
+3. Roll back one migration
+   alembic downgrade -1

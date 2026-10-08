@@ -1,0 +1,44 @@
+[
+  {
+    "bike_name": "Royal Enfield Classic 350",
+    "brand": "Royal Enfield",
+    "model": "2023",
+    "price_per_day": 1200,
+    "price_per_hour": 150,
+    "availability": "Available",
+    "image_url": "https://images.unsplash.com/photo-1558981403-c5f9899a28bc?q=80&w=800",
+    "engine": "349cc",
+    "torque": "27 Nm",
+    "fuel_tank": "13 L",
+    "mileage": "35 kmpl",
+    "plate_number": "MH12AB1234"
+  },
+  {
+    "bike_name": "Honda Activa 6G",
+    "brand": "Honda",
+    "model": "2023",
+    "price_per_day": 500,
+    "price_per_hour": 50,
+    "availability": "Available",
+    "image_url": "https://images.unsplash.com/photo-1629895237742-1262d29fdfac?q=80&w=800",
+    "engine": "109cc",
+    "torque": "8.9 Nm",
+    "fuel_tank": "5.3 L",
+    "mileage": "50 kmpl",
+    "plate_number": "MH12XY5678"
+  },
+  {
+    "bike_name": "KTM Duke 390",
+    "brand": "KTM",
+    "model": "2023",
+    "price_per_day": 1500,
+    "price_per_hour": 250,
+    "availability": "Available",
+    "image_url": "https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?q=80&w=800",
+    "engine": "373cc",
+    "torque": "37 Nm",
+    "fuel_tank": "13.4 L",
+    "mileage": "25 kmpl",
+    "plate_number": "MH12YZ9012"
+  }
+]

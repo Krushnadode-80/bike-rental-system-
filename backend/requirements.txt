@@ -1,0 +1,46 @@
+# ==============================================================================
+# Core Web Framework & ASGI Server
+# ==============================================================================
+fastapi==0.110.0
+uvicorn==0.28.0
+python-multipart==0.0.9            # Required for uploading files and form parsing (e.g., auth routes)
+
+# ==============================================================================
+# Database & Migrations
+# ==============================================================================
+sqlalchemy==2.0.28
+psycopg2-binary==2.9.9             # PostgreSQL driver for production databases
+alembic==1.13.1                    # Database schema migration tool
+
+# ==============================================================================
+# Authentication & Security
+# ==============================================================================
+passlib[bcrypt]==1.7.4             # Password hashing utilities
+python-jose[cryptography]==3.3.0   # JWT encoding and decoding
+
+# ==============================================================================
+# Payment Integration & QR Codes
+# ==============================================================================
+razorpay==1.4.1                    # Razorpay gateway API client
+qrcode==7.4.2                      # UPI payment dynamic QR code generation
+pillow==10.2.0                     # Image processing (Required by qrcode library to generate & save PNGs)
+
+# ==============================================================================
+# Media, Email & Notifications
+# ==============================================================================
+cloudinary==1.39.0                 # Cloud storage service integration for user images & documents
+fastapi-mail==1.4.1                # FastMail integrations for sending OTPs & confirmation emails
+
+# ==============================================================================
+# Utilities, Schema Validation & PDF Generation
+# ==============================================================================
+python-dotenv==1.0.1               # Load configurations from .env files
+google-genai>=1.0.0                # Gemini API for the website chat assistant
+pydantic>=2.12.5,<3                # Data validation & settings management (required by current google-genai)
+email-validator==2.1.1             # Pydantic extension for EmailStr validation
+reportlab==4.1.0                   # PDF creation library used to generate customer invoices (invoice.py)
+
+# ==============================================================================
+# Testing & Diagnostics (Developer Tools)
+# ==============================================================================
+requests==2.31.0                   # HTTP library used in debug & endpoint flow test scripts
