@@ -6,6 +6,7 @@ import { ThemeProvider } from "./context/ThemeContext";
 
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import HomePage from "./pages/HomePage";
 import TermsPage from "./pages/TermsPage";
 import AboutPage from "./pages/AboutPage";
@@ -46,6 +47,7 @@ function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/admin" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
+            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
             <Route path="/terms" element={<ProtectedRoute><TermsPage /></ProtectedRoute>} />
             <Route path="/about" element={<ProtectedRoute><AboutPage /></ProtectedRoute>} />
             <Route path="/contact" element={<ProtectedRoute><ContactPage /></ProtectedRoute>} />

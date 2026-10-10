@@ -145,16 +145,20 @@ const LoginPage = () => {
                 />
                 <label htmlFor="remember">Remember me</label>
               </div>
-              <span style={{ color: '#ff5e14', fontSize: '13px', cursor: 'pointer', fontWeight: '600' }}>Forgot?</span>
+              {!isAdminLogin && (
+                <Link to="/forgot-password" style={{ color: '#ff5e14', fontSize: '13px', textDecoration: 'none', fontWeight: '600' }}>Forgot?</Link>
+              )}
             </div>
 
             <button type="submit" className="premium-btn" disabled={loading}>
               {loading ? 'Logging in...' : 'Log In'}
             </button>
 
-            <div className="auth-switch">
-              Don't have an account? <Link to="/register" style={{ color: '#ff5e14' }}>Sign up</Link>
-            </div>
+            {!isAdminLogin && (
+              <div className="auth-switch">
+                Don't have an account? <Link to="/register" style={{ color: '#ff5e14' }}>Sign up</Link>
+              </div>
+            )}
           </form>
         </div>
       </div>

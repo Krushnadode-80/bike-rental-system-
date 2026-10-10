@@ -16,7 +16,14 @@ from database.database import get_db
 
 from models.user_model import User, OTP
 
-from schemas.user_schema import UserCreate, UserLogin, UserProfileUpdate, UserProfileResponse
+from schemas.user_schema import (
+    UserCreate,
+    UserLogin,
+    UserProfileUpdate,
+    UserProfileResponse,
+    ForgotPasswordRequest,
+    ForgotPasswordReset
+)
 
 from auth.auth_handler import (
     hash_password,
@@ -313,4 +320,83 @@ def update_profile(
     
     db.commit()
     return {"message": "Profile updated successfully"}
+
+
+@router.post("/forgot-password/send-otp")
+async def forgot_password_send_otp(
+    payload: ForgotPasswordRequest,
+    db: Session = Depends(get_db)
+):
+    email = payload.email.strip().lower()
+    user = db.query(User).filter(User.email == email).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="No account registered with this email address.")
+    
+    otp = str(random.randint(100000, 999999))
+    
+    db.query(OTP).filter(OTP.email == email).delete()
+    new_otp = OTP(email=email, otp=otp, expires_at=int(time.time() + 600))
+    db.add(new_otp)
+    db.commit()
+
+    html = f"""
+    <div style='padding:20px; font-family:Arial, sans-serif; color:#333; background-color:#fafafa; border-radius:8px;'>
+        <h2 style='color:#ff5e14; margin-top:0;'>Bike Rental - Password Reset</h2>
+        <p>Hello <b>{user.name}</b>,</p>
+        <p>You requested to reset your password. Use the verification OTP code below:</p>
+        <div style='background:#1e293b; padding:15px; border-radius:8px; display:inline-block; margin:15px 0;'>
+            <h1 style='color:#ff5e14; margin:0; letter-spacing:6px; font-size:32px;'>{otp}</h1>
+        </div>
+        <p style='color:#64748b; font-size:14px;'>This OTP code is valid for <b>10 minutes</b>. If you did not request a password reset, please ignore this email.</p>
+    </div>
+    """
+
+    message = MessageSchema(
+        subject="Password Reset Verification Code - Bike Rental",
+        recipients=[email],
+        body=html,
+        subtype="html"
+    )
+
+    try:
+        fm = FastMail(conf)
+        await fm.send_message(message)
+        return {"message": "Password reset OTP sent to your email."}
+    except Exception as e:
+        print(f"EMAIL ERROR: {e}")
+        db.query(OTP).filter(OTP.email == email).delete()
+        db.commit()
+        raise HTTPException(status_code=503, detail="Unable to send email right now. Please try again later.")
+
+
+@router.post("/forgot-password/reset")
+def forgot_password_reset(
+    payload: ForgotPasswordReset,
+    db: Session = Depends(get_db)
+):
+    email = payload.email.strip().lower()
+    user = db.query(User).filter(User.email == email).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    if not payload.new_password or len(payload.new_password) < 6:
+        raise HTTPException(status_code=400, detail="Password must be at least 6 characters long.")
+
+    otp_record = db.query(OTP).filter(OTP.email == email).first()
+    if not otp_record:
+        raise HTTPException(status_code=400, detail="OTP not found or expired. Please request a new OTP.")
+    if time.time() > otp_record.expires_at:
+        db.delete(otp_record)
+        db.commit()
+        raise HTTPException(status_code=400, detail="OTP has expired. Please request a new OTP.")
+    if not secrets.compare_digest(str(otp_record.otp), str(payload.otp).strip()):
+        raise HTTPException(status_code=400, detail="Invalid OTP code.")
+
+    hashed_pwd = hash_password(payload.new_password)
+    user.password = hashed_pwd
+    db.delete(otp_record)
+    db.commit()
+
+    return {"message": "Password reset successful! You can now log in with your new password."}
+
 

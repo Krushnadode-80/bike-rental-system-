@@ -11,7 +11,7 @@ const Navbar = () => {
   const location = useLocation();
   const [showProfileModal, setShowProfileModal] = useState(false);
 
-  if (location.pathname === '/login' || location.pathname === '/register' || location.pathname === '/admin') {
+  if (location.pathname === '/login' || location.pathname === '/register' || location.pathname === '/admin' || location.pathname === '/forgot-password') {
     return null;
   }
 

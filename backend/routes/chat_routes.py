@@ -290,9 +290,11 @@ def chat(
         client = genai.Client(
             api_key=api_key,
             http_options=types.HttpOptions(
+                # Gemini requires a minimum 10-second request deadline. Keep
+                # retries disabled so transient failures do not double the wait.
                 timeout=10000,
                 retry_options=types.HttpRetryOptions(
-                    attempts=2,
+                    attempts=1,
                     initial_delay=0.5,
                     max_delay=1.0,
                     jitter=0.2,
@@ -419,5 +421,10 @@ def chat(
             raise HTTPException(
                 status_code=503,
                 detail="The AI service is temporarily unavailable. Please try again shortly.",
+            ) from exc
+        if error_code == 504:
+            raise HTTPException(
+                status_code=504,
+                detail="The AI service timed out. Check the backend's internet connection and try again.",
             ) from exc
         raise HTTPException(status_code=502, detail="The chat assistant is temporarily unavailable.") from exc

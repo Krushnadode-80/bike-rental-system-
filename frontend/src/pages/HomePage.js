@@ -56,6 +56,7 @@ const HomePage = () => {
 
   // OTP State
   const [otpSent, setOtpSent] = useState(false);
+  const [isSendingOtp, setIsSendingOtp] = useState(false);
   const [otpCode, setOtpCode] = useState('');
   const [otpError, setOtpError] = useState(null);
   const [otpVerified, setOtpVerified] = useState(false);
@@ -201,6 +202,8 @@ const HomePage = () => {
   };
 
   const handleSendOTP = async () => {
+    if (isSendingOtp) return;
+    setIsSendingOtp(true);
     setOtpError(null);
     try {
       await sendOTP();
@@ -209,6 +212,8 @@ const HomePage = () => {
     } catch (err) {
       setOtpError(err);
       toast.error(String(err));
+    } finally {
+      setIsSendingOtp(false);
     }
   };
 
@@ -556,10 +561,17 @@ const HomePage = () => {
                             {otpSent ? (
                               <>
                                 <input type="text" inputMode="numeric" maxLength={6} pattern="[0-9]{6}" className="cc-input" placeholder="6-digit OTP" value={otpCode} onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, '').slice(0, 6))} style={{ flex: 1 }} />
-                                <button onClick={handleVerifyOTP} className="cc-pay-btn" style={{ flex: 1, padding: '12px', marginTop: 0 }}>Verify</button>
+                                <button onClick={handleVerifyOTP} className="cc-pay-btn verify-btn-effect" style={{ flex: 1, padding: '12px', marginTop: 0 }}>Verify</button>
                               </>
                             ) : (
-                              <button onClick={handleSendOTP} className="cc-pay-btn" style={{ padding: '12px', marginTop: 0 }}>Send Verification OTP</button>
+                              <button onClick={handleSendOTP} disabled={isSendingOtp} className="cc-pay-btn verify-btn-effect verify-btn-pulse" style={{ padding: '12px', marginTop: 0 }}>
+                                {isSendingOtp ? (
+                                  <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                                    <span className="spinner" style={{ width: '14px', height: '14px', border: '2px solid #ffffff', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></span>
+                                    Sending OTP...
+                                  </span>
+                                ) : 'Send Verification OTP'}
+                              </button>
                             )}
                           </div>
                         </div>
