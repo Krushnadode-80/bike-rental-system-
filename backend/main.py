@@ -9,6 +9,7 @@ import sqlalchemy as sa
 import os
 from dotenv import load_dotenv
 from database.database import engine, Base
+from routes.upload_routes import router as upload_router
 
 load_dotenv()
 
@@ -25,6 +26,9 @@ from routes.payment_routes import router as payment_router
 from routes.chat_routes import router as chat_router
 
 app = FastAPI()
+
+app.include_router(upload_router, prefix="/api")
+app.include_router(upload_router)
 
 
 def ensure_users_table_columns():

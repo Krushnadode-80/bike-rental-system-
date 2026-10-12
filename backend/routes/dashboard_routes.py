@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 from database.database import get_db
-from models.user_model import User
+from models.user_model import User, OTP, UserVerification, Favorite
 from models.bike_model import Bike
 from models.booking_model import Booking
 from routes.admin_deps import get_admin_user
@@ -155,9 +155,24 @@ def delete_admin_user(
         raise HTTPException(status_code=404, detail="User not found")
     if (user.role or "user") == "admin":
         raise HTTPException(status_code=400, detail="Admin users cannot be deleted")
-    db.delete(user)
-    db.commit()
-    return {"message": "User deleted successfully"}
+
+    try:
+        # Delete dependent records so foreign key constraints are not violated
+        db.query(Favorite).filter(Favorite.user_email == user.email).delete(synchronize_session=False)
+        db.query(OTP).filter(OTP.email == user.email).delete(synchronize_session=False)
+        db.query(UserVerification).filter(
+            (UserVerification.user_id == user_id) | (UserVerification.email == user.email)
+        ).delete(synchronize_session=False)
+        db.query(Booking).filter(
+            (Booking.user_id == user_id) | (Booking.user_email == user.email)
+        ).delete(synchronize_session=False)
+
+        db.delete(user)
+        db.commit()
+        return {"message": "User deleted successfully"}
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Failed to delete user: {str(e)}")
 
 @router.put("/admin/users/{user_id}")
 def update_admin_user(

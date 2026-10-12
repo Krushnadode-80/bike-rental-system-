@@ -4,6 +4,8 @@ import secrets
 import os
 import shutil
 import time
+import cloudinary.uploader
+import cloudinary_config
 from fastapi_mail import FastMail
 from fastapi_mail import MessageSchema
 from utils.email_config import conf
@@ -116,7 +118,7 @@ def verify_otp(
 
 @router.post("/upload-photo")
 def upload_photo(
-    type: str = Form(...), # 'profile' or 'pan_card'
+    type: str = Form(...), # 'profile', 'pan_card', or 'aadhaar'
     file: UploadFile = File(...),
     email: str = Depends(verify_token),
     db: Session = Depends(get_db)
@@ -125,19 +127,24 @@ def upload_photo(
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     
-    os.makedirs("uploads", exist_ok=True)
+    try:
+        result = cloudinary.uploader.upload(
+            file.file,
+            folder="bike-rental/kyc",
+            resource_type="auto"
+        )
+        url = result.get("secure_url") or result.get("url")
+    except Exception as e:
+        raise HTTPException(
+            status_code=502,
+            detail=f"Cloudinary upload failed: {str(e)}"
+        )
+    finally:
+        file.file.close()
     
-    file_extension = file.filename.split('.')[-1]
-    filename = f"{type}_{user.id}.{file_extension}"
-    file_path = os.path.join("uploads", filename)
-    
-    with open(file_path, "wb") as buffer:
-        shutil.copyfileobj(file.file, buffer)
-    
-    url = f"http://127.0.0.1:8000/uploads/{filename}"
     if type == "profile":
         user.profile_photo = url
-    elif type == "pan_card":
+    elif type in ("pan_card", "pan"):
         user.pan_card = url
     elif type == "aadhaar":
         user.aadhaar_doc = url

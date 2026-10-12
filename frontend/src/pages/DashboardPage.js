@@ -39,6 +39,7 @@ const DashboardPage = () => {
     image_url: '', engine: '', mileage: '', torque: '', fuel_tank: '', plate_number: ''
   });
   const [bikeLoading, setBikeLoading] = useState(false);
+  const [uploadingBikeImage, setUploadingBikeImage] = useState(false);
   const [showAddBikeModal, setShowAddBikeModal] = useState(false);
   const [selectedViewBike, setSelectedViewBike] = useState(null);
   const [editBikeId, setEditBikeId] = useState(null);
@@ -128,6 +129,37 @@ const DashboardPage = () => {
 
   const handleBikeChange = (e) => {
     setBikeForm({ ...bikeForm, [e.target.name]: e.target.value });
+  };
+
+  const handleDashboardBikeImageChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
+      toast.error('Only JPG, PNG and WEBP images are allowed');
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error('Image size must be 5 MB or less');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    setUploadingBikeImage(true);
+    const toastId = toast.loading('Uploading image to Cloudinary...');
+    try {
+      const res = await client.post('/api/upload-image', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      setBikeForm((prev) => ({ ...prev, image_url: res.data.url }));
+      toast.success('Image uploaded to Cloudinary successfully!', { id: toastId });
+    } catch (err) {
+      toast.error(err.response?.data?.detail || 'Failed to upload image to Cloudinary', { id: toastId });
+    } finally {
+      setUploadingBikeImage(false);
+    }
   };
 
   const handleAddBike = async (e) => {
@@ -640,9 +672,26 @@ const DashboardPage = () => {
                   <input name="fuel_tank" maxLength={40} value={bikeForm.fuel_tank} onChange={handleBikeChange} placeholder="Fuel Type/Capacity (e.g. Petrol / 13L)" style={{ padding: '12px', borderRadius: '8px', border: '1px solid #e2e8f0', fontSize: '14px', outline: 'none' }} />
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '16px' }}>
                   <input name="plate_number" maxLength={20} value={bikeForm.plate_number} onChange={handleBikeChange} placeholder="Plate Number (e.g. MH-12-AB-1234)" style={{ padding: '12px', borderRadius: '8px', border: '1px solid #e2e8f0', fontSize: '14px', outline: 'none' }} />
-                  <input name="image_url" type="url" maxLength={2048} value={bikeForm.image_url} onChange={handleBikeChange} placeholder="Image URL" required style={{ padding: '12px', borderRadius: '8px', border: '1px solid #e2e8f0', fontSize: '14px', outline: 'none' }} />
+                </div>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <label style={{ fontSize: '13px', fontWeight: '600', color: '#475569' }}>Bike Image (Upload to Cloudinary)</label>
+                  <input
+                    type="file"
+                    accept="image/png, image/jpeg, image/webp"
+                    onChange={handleDashboardBikeImageChange}
+                    disabled={uploadingBikeImage}
+                    style={{ fontSize: '13px', padding: '6px 0' }}
+                  />
+                  {uploadingBikeImage && <span style={{ fontSize: '12px', color: '#3b82f6' }}>Uploading to Cloudinary...</span>}
+                  <input name="image_url" type="url" maxLength={2048} value={bikeForm.image_url} onChange={handleBikeChange} placeholder="Image URL (auto-filled on file upload)" required style={{ padding: '12px', borderRadius: '8px', border: '1px solid #e2e8f0', fontSize: '14px', outline: 'none' }} />
+                  {bikeForm.image_url && (
+                    <div style={{ width: '120px', height: '80px', borderRadius: '8px', overflow: 'hidden', border: '1px solid #e2e8f0', marginTop: '4px' }}>
+                      <img src={bikeForm.image_url} alt="Bike Preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    </div>
+                  )}
                 </div>
 
                 <button type="submit" disabled={bikeLoading} style={{ background: '#3b82f6', color: '#fff', border: 'none', padding: '14px', borderRadius: '8px', fontSize: '15px', fontWeight: 'bold', cursor: 'pointer', marginTop: '16px' }}>

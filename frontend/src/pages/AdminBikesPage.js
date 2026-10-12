@@ -26,8 +26,40 @@ const AdminBikesPage = () => {
   const [fuelTank, setFuelTank] = useState('');
   const [mileage, setMileage] = useState('');
   const [plateNumber, setPlateNumber] = useState('');
+  const [uploadingImage, setUploadingImage] = useState(false);
 
   const [formLoading, setFormLoading] = useState(false);
+
+  const handleImageFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
+      toast.error('Only JPG, PNG and WEBP images are allowed');
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error('Image size must be 5 MB or less');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    setUploadingImage(true);
+    const toastId = toast.loading('Uploading image to Cloudinary...');
+    try {
+      const res = await client.post('/api/upload-image', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      setImageUrl(res.data.url);
+      toast.success('Image uploaded to Cloudinary successfully!', { id: toastId });
+    } catch (err) {
+      toast.error(err.response?.data?.detail || 'Failed to upload image to Cloudinary', { id: toastId });
+    } finally {
+      setUploadingImage(false);
+    }
+  };
 
   const fetchBikes = async () => {
     try {
@@ -291,8 +323,30 @@ const AdminBikesPage = () => {
               </div>
 
               <div className="form-group" style={{ marginBottom: '14px' }}>
-                <label className="form-label">Catalog Display Image URL</label>
-                <input type="url" maxLength={2048} className="form-input" placeholder="https://images.unsplash.com/... or direct image link" value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} />
+                <label className="form-label">Bike Image (Upload to Cloudinary)</label>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <input
+                    type="file"
+                    accept="image/png, image/jpeg, image/webp"
+                    onChange={handleImageFileChange}
+                    disabled={uploadingImage}
+                    style={{ fontSize: '13px', padding: '6px 0' }}
+                  />
+                  {uploadingImage && <span style={{ fontSize: '12px', color: 'var(--accent)' }}>Uploading image to Cloudinary...</span>}
+                  <input 
+                    type="url" 
+                    maxLength={2048} 
+                    className="form-input" 
+                    placeholder="Image URL (auto-filled on file upload, or enter URL)" 
+                    value={imageUrl} 
+                    onChange={(e) => setImageUrl(e.target.value)} 
+                  />
+                  {imageUrl && (
+                    <div style={{ marginTop: '6px', width: '120px', height: '80px', borderRadius: '8px', overflow: 'hidden', border: '1px solid var(--border-light)' }}>
+                      <img src={imageUrl} alt="Bike Preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    </div>
+                  )}
+                </div>
               </div>
 
               <h4 style={{ fontSize: '13px', fontWeight: 800, textTransform: 'uppercase', color: 'var(--accent)', margin: '20px 0 10px 0', borderBottom: '1px solid var(--border-light)', paddingBottom: '6px' }}>
