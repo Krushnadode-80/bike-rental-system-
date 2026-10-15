@@ -7,7 +7,7 @@ const TermsPage = () => {
       <p style={{ lineHeight: '1.6', color: '#a1a1aa', marginBottom: '16px' }}>
         Welcome to Bike Rental. By accessing or using our services, you agree to be bound by these Terms and Conditions. Please read them carefully.
       </p>
-      
+
       <h3 style={{ marginTop: '32px', marginBottom: '12px' }}>1. Use of Services</h3>
       <p style={{ lineHeight: '1.6', color: '#a1a1aa', marginBottom: '16px' }}>
         You must be at least 18 years old and hold a valid driver's license (if applicable to the vehicle type) to rent a vehicle from us. You agree to provide accurate, current, and complete information during the registration process.

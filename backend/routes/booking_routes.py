@@ -207,6 +207,36 @@ def cancel_booking(
         "message": "Booking Cancelled Successfully"
     }
 
+@router.delete("/delete-booking/{booking_id}")
+@router.delete("/admin/bookings/{booking_id}")
+def delete_booking(
+    booking_id: int,
+    db: Session = Depends(get_db)
+):
+    booking = db.query(Booking).filter(
+        Booking.id == booking_id
+    ).first()
+
+    if not booking:
+        raise HTTPException(status_code=404, detail="Booking Not Found")
+
+    if booking.status == "Booked":
+        other_active = db.query(Booking).filter(
+            Booking.bike_name == booking.bike_name,
+            Booking.status == "Booked",
+            Booking.id != booking.id
+        ).first()
+        if not other_active:
+            bike = db.query(Bike).filter(Bike.bike_name == booking.bike_name).first()
+            if bike:
+                bike.availability = "Available"
+
+    db.delete(booking)
+    db.commit()
+    return {
+        "message": "Booking Deleted Successfully"
+    }
+
 @router.get("/admin/bookings")
 def get_all_bookings(db: Session = Depends(get_db)):
     auto_cleanup_rentals(db)

@@ -423,3 +423,147 @@
   background: #3b82f6;
   color: #fff;
 }
+
+/* =========================================
+   RESPONSIVE DASHBOARD LAYOUT ACROSS DEVICES
+   ========================================= */
+
+.dash-mobile-menu-btn {
+  display: none;
+  background: transparent;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  width: 40px;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #0f172a;
+  flex-shrink: 0;
+}
+
+.dash-sidebar-overlay {
+  display: none;
+}
+
+/* Horizontal scroll for all dashboard tables on mobile/touch screens */
+.dash-table-container, .table-container {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  max-width: 100%;
+}
+
+.dash-table, .custom-table {
+  min-width: 620px;
+}
+
+@media (max-width: 1100px) {
+  .dash-main {
+    padding: 24px 28px;
+  }
+  .dash-charts-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .dash-bottom-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  .dash-cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+}
+
+@media (max-width: 860px) {
+  .dash-layout {
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  .dash-mobile-menu-btn {
+    display: inline-flex;
+  }
+
+  .dash-sidebar-overlay {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(15, 23, 42, 0.65);
+    backdrop-filter: blur(4px);
+    z-index: 999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+
+  .dash-sidebar-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .dash-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 270px;
+    z-index: 1000;
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.25);
+  }
+
+  .dash-sidebar.open {
+    transform: translateX(0);
+  }
+
+  .dash-main {
+    padding: 20px 16px;
+    width: 100%;
+  }
+
+  .dash-header {
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .dash-header h1 {
+    font-size: 22px;
+  }
+
+  .dash-bottom-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .dash-cards-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px;
+  }
+
+  .dash-table-container {
+    padding: 16px;
+    border-radius: 14px;
+  }
+
+  .dash-card {
+    padding: 16px;
+  }
+
+  .dash-icon-box {
+    width: 42px;
+    height: 42px;
+    margin-right: 14px;
+  }
+
+  .dash-card-info h4 {
+    font-size: 22px;
+  }
+}
+

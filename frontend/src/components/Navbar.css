@@ -1,13 +1,14 @@
 .main-navbar {
   background-color: var(--header-bg);
   border-bottom: 1px solid var(--border-color);
-  padding: 0 40px;
+  padding: 0 clamp(16px, 3vw, 40px);
   height: 72px;
   display: flex;
   align-items: center;
   position: sticky;
   top: 0;
   z-index: 50;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .main-navbar-wrapper {
@@ -28,17 +29,19 @@
   font-weight: 800;
   font-size: 20px;
   flex: 1;
+  white-space: nowrap;
 }
 
 .main-logo-icon {
   color: #ff5e14;
+  flex-shrink: 0;
 }
 
 .main-navbar-center {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 32px;
+  gap: clamp(16px, 2.5vw, 32px);
   flex: 2;
 }
 
@@ -48,6 +51,7 @@
   font-weight: 600;
   font-size: 15px;
   transition: color 0.2s ease;
+  white-space: nowrap;
 }
 
 .main-nav-link:hover {
@@ -62,14 +66,16 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 20px;
+  gap: 16px;
   flex: 1;
+  white-space: nowrap;
 }
 
 .main-greeting {
   font-size: 14px;
   color: var(--text-main);
   font-weight: 600;
+  white-space: nowrap;
 }
 
 .main-btn-logout {
@@ -77,11 +83,12 @@
   color: #ffffff;
   border: none;
   border-radius: 6px;
-  padding: 8px 24px;
+  padding: 8px 20px;
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
   transition: background-color 0.2s ease;
+  white-space: nowrap;
 }
 
 .main-btn-logout:hover {
@@ -108,6 +115,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  white-space: nowrap;
 }
 
 .main-btn-login:hover {
@@ -129,10 +137,126 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  white-space: nowrap;
 }
 
 .main-btn-signup:hover {
   background-color: #1d4ed8;
   transform: translateY(-1px);
   box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2), 0 2px 4px -1px rgba(37, 99, 235, 0.1);
+}
+
+.main-btn-full {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 20px;
+  box-sizing: border-box;
+}
+
+/* Hamburger button */
+.main-navbar-hamburger {
+  display: none;
+  background: transparent;
+  border: none;
+  color: var(--text-main);
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease;
+}
+
+.main-navbar-hamburger:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* Mobile dropdown menu */
+.main-navbar-mobile-menu {
+  display: none;
+}
+
+/* Responsive Breakpoint for Tablets and Phones */
+@media (max-width: 860px) {
+  .main-navbar-center,
+  .main-navbar-right {
+    display: none;
+  }
+
+  .main-navbar-hamburger {
+    display: flex;
+  }
+
+  .main-navbar-mobile-menu {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 72px;
+    left: 0;
+    right: 0;
+    background-color: var(--bg-card);
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.12);
+    padding: 20px 24px 24px 24px;
+    gap: 14px;
+    z-index: 100;
+    animation: slideDownNav 0.25s ease-out forwards;
+  }
+
+  .main-mobile-link {
+    text-decoration: none;
+    color: var(--text-main);
+    font-size: 16px;
+    font-weight: 600;
+    padding: 10px 12px;
+    border-radius: 8px;
+    transition: background-color 0.2s, color 0.2s;
+  }
+
+  .main-mobile-link:hover,
+  .main-mobile-link.active {
+    background-color: rgba(255, 94, 20, 0.1);
+    color: #ff5e14;
+  }
+
+  .main-mobile-divider {
+    height: 1px;
+    background-color: var(--border-color);
+    margin: 8px 0;
+  }
+
+  .main-mobile-user-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .main-mobile-greeting {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-main);
+    padding: 8px 12px;
+    background: var(--bg-main);
+    border-radius: 8px;
+    cursor: pointer;
+  }
+
+  .main-mobile-auth-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+@keyframes slideDownNav {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

@@ -7,7 +7,7 @@ import toast from 'react-hot-toast';
 import { loginSchema, validateWithToast } from '../validation/schemas';
 
 const LoginPage = () => {
-  const { login } = useAuth();
+  const { login, logout } = useAuth();
   const navigate = useNavigate();
   const isAdminLogin = useLocation().pathname === '/admin';
 
@@ -26,15 +26,28 @@ const LoginPage = () => {
     if (!validateWithToast(loginSchema, { email, password })) return;
     setLoading(true);
     try {
-      await login(email, password);
-      toast.success('Welcome back!');
+      const res = await login(email, password);
       const userStr = localStorage.getItem('user');
-      if (userStr) {
-        const userObj = JSON.parse(userStr);
-        if (userObj.role === 'admin') {
-          navigate('/dashboard');
+      const userObj = userStr ? JSON.parse(userStr) : null;
+      const role = res?.role || userObj?.role;
+
+      if (isAdminLogin) {
+        if (role !== 'admin') {
+          logout();
+          const deniedMsg = 'Access denied. Only admin users can log in to the admin dashboard.';
+          setError(deniedMsg);
+          toast.error(deniedMsg);
           return;
         }
+        toast.success('Welcome to Admin Dashboard!');
+        navigate('/dashboard');
+        return;
+      }
+
+      toast.success('Welcome back!');
+      if (role === 'admin') {
+        navigate('/dashboard');
+        return;
       }
       navigate('/');
     } catch (err) {
@@ -58,7 +71,7 @@ const LoginPage = () => {
             <h1>Bike <span>Rental</span></h1>
             <p>Your Journey Starts Here</p>
           </div>
-          
+
           <h2>Join our<br />community.</h2>
           <p className="auth-desc">
             Unlock the freedom of the road with the city's premier bike rental experience. Join thousands of riders today.
@@ -137,11 +150,11 @@ const LoginPage = () => {
 
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px' }}>
               <div className="terms-checkbox" style={{ margin: 0 }}>
-                <input 
-                  type="checkbox" 
-                  id="remember" 
-                  checked={rememberMe} 
-                  onChange={(e) => setRememberMe(e.target.checked)} 
+                <input
+                  type="checkbox"
+                  id="remember"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
                 />
                 <label htmlFor="remember">Remember me</label>
               </div>

@@ -184,12 +184,12 @@ const ContactPage = () => {
       {/* Footer Section */}
       <footer style={{ backgroundColor: 'var(--bg-card)', color: 'var(--text-main)', paddingTop: '60px', borderTop: '1px solid var(--border-color)' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 20px', display: 'flex', flexWrap: 'wrap', gap: '40px', justifyContent: 'space-between' }}>
-          
+
           {/* Brand Column */}
           <div style={{ flex: '1 1 250px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '20px', color: '#fff' }}>
-               <Bike size={28} color="#ff5e14" />
-               <h2 style={{ fontSize: '24px', fontWeight: 900, margin: 0, letterSpacing: '1px' }}>Bike Rental</h2>
+              <Bike size={28} color="#ff5e14" />
+              <h2 style={{ fontSize: '24px', fontWeight: 900, margin: 0, letterSpacing: '1px' }}>Bike Rental</h2>
             </div>
             <p style={{ fontSize: '14px', lineHeight: '1.6', marginBottom: '24px', color: '#94a3b8' }}>
               Your trusted partner for premium bike rentals. Ride more, worry less with our reliable service.
@@ -216,7 +216,7 @@ const ContactPage = () => {
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '12px' }}>
               {['Home', 'Browse Bikes', 'My Bookings', 'About Us', 'Contact Us'].map(link => (
                 <li key={link} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '14px', cursor: 'pointer', transition: 'color 0.2s' }}>
-                  <ChevronRight size={14} color="#64748b" /> 
+                  <ChevronRight size={14} color="#64748b" />
                   <span onMouseOver={(e) => e.target.style.color = '#ff5e14'} onMouseOut={(e) => e.target.style.color = '#cbd5e1'}>{link}</span>
                 </li>
               ))}
@@ -229,7 +229,7 @@ const ContactPage = () => {
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '12px' }}>
               {['Royal Enfield Classic 350', 'Yamaha R15 V4', 'KTM Duke 390', 'Honda Activa 6G'].map(bike => (
                 <li key={bike} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '14px', cursor: 'pointer', transition: 'color 0.2s' }}>
-                  <ChevronRight size={14} color="#64748b" /> 
+                  <ChevronRight size={14} color="#64748b" />
                   <span onMouseOver={(e) => e.target.style.color = '#ff5e14'} onMouseOut={(e) => e.target.style.color = '#cbd5e1'}>{bike}</span>
                 </li>
               ))}
@@ -242,7 +242,7 @@ const ContactPage = () => {
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '12px' }}>
               {['Help Center', 'Terms & Conditions', 'Privacy Policy', 'Cancellation Policy'].map(item => (
                 <li key={item} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '14px', cursor: 'pointer', transition: 'color 0.2s' }}>
-                  <ChevronRight size={14} color="#64748b" /> 
+                  <ChevronRight size={14} color="#64748b" />
                   <span onMouseOver={(e) => e.target.style.color = '#ff5e14'} onMouseOut={(e) => e.target.style.color = '#cbd5e1'}>{item}</span>
                 </li>
               ))}
@@ -263,7 +263,7 @@ const ContactPage = () => {
               </div>
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
                 <MapPin size={18} color="#ff5e14" style={{ marginTop: '2px', minWidth: '18px' }} />
-                <span style={{ fontSize: '14px', lineHeight: '1.5' }}>123 Riding Avenue, Motor City,<br/>Maharashtra 400001, India</span>
+                <span style={{ fontSize: '14px', lineHeight: '1.5' }}>123 Riding Avenue, Motor City,<br />Maharashtra 400001, India</span>
               </div>
             </div>
           </div>

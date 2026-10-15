@@ -15,8 +15,6 @@
   --brand-red: #ef4444;
 }
 
-
-
 [data-theme="black"] {
   /* Black Mode (High Contrast Dark) */
   --bg-main: #000000;
@@ -26,6 +24,21 @@
   --border-color: #1e293b;
   --input-bg: #000000;
   --header-bg: #000000;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+html, body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 body {
@@ -38,6 +51,15 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+img, video, svg {
+  max-width: 100%;
+  height: auto;
+}
+
+input, button, select, textarea {
+  font-family: inherit;
 }
 
 select option {

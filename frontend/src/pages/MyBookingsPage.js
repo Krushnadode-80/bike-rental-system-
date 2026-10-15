@@ -53,11 +53,11 @@ const MyBookingsPage = () => {
   const handleDownloadPDF = () => {
     const element = document.getElementById('invoice-receipt-card');
     if (!element || !window.html2pdf) return;
-    
+
     // Temporarily move the element to the top level of the body to ensure perfect capture
     const originalParent = element.parentNode;
     const originalNextSibling = element.nextSibling;
-    
+
     const wrapper = document.createElement('div');
     wrapper.style.position = 'absolute';
     wrapper.style.top = window.scrollY + 'px';
@@ -68,7 +68,7 @@ const MyBookingsPage = () => {
     wrapper.style.padding = '40px';
     wrapper.style.display = 'flex';
     wrapper.style.justifyContent = 'center';
-    
+
     wrapper.appendChild(element);
     document.body.appendChild(wrapper);
 
@@ -78,11 +78,11 @@ const MyBookingsPage = () => {
 
     // Configure html2pdf options for high quality output
     const opt = {
-      margin:       0.2,
-      filename:     `MotorCity_Receipt_BR-${selectedInvoice.id}9X.pdf`,
-      image:        { type: 'jpeg', quality: 1 },
-      html2canvas:  { scale: 2, useCORS: true, logging: false, y: window.scrollY, scrollY: window.scrollY },
-      jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+      margin: 0.2,
+      filename: `MotorCity_Receipt_BR-${selectedInvoice.id}9X.pdf`,
+      image: { type: 'jpeg', quality: 1 },
+      html2canvas: { scale: 2, useCORS: true, logging: false, y: window.scrollY, scrollY: window.scrollY },
+      jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
     };
 
     window.html2pdf().set(opt).from(element).save().then(() => {
@@ -113,12 +113,12 @@ const MyBookingsPage = () => {
 
   return (
     <div style={{ backgroundColor: '#f1f5f9', minHeight: '100vh', paddingBottom: '80px', color: '#1e293b' }}>
-      
+
       {/* Dark Premium Hero Header */}
-      <div style={{ 
-        background: 'linear-gradient(rgba(15, 23, 42, 0.75), rgba(15, 23, 42, 0.95)), url("https://images.unsplash.com/photo-1449426468159-d96dbf08f19f?q=80&w=1920") no-repeat center center/cover', 
-        padding: '100px 20px 120px 20px', 
-        textAlign: 'center', 
+      <div style={{
+        background: 'linear-gradient(rgba(15, 23, 42, 0.75), rgba(15, 23, 42, 0.95)), url("https://images.unsplash.com/photo-1449426468159-d96dbf08f19f?q=80&w=1920") no-repeat center center/cover',
+        padding: '100px 20px 120px 20px',
+        textAlign: 'center',
         color: '#fff',
         boxShadow: '0 10px 30px rgba(0,0,0,0.1)'
       }}>
@@ -129,7 +129,7 @@ const MyBookingsPage = () => {
       </div>
 
       <div style={{ maxWidth: '1000px', margin: '-40px auto 0 auto', padding: '0 20px', position: 'relative', zIndex: 10 }}>
-        
+
         {loading ? (
           <div style={{ textAlign: 'center', padding: '60px', backgroundColor: '#fff', borderRadius: '16px', boxShadow: '0 10px 30px rgba(0,0,0,0.05)' }}>
             <div style={{ width: '40px', height: '40px', border: '4px solid #ff5e14', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 1s linear infinite', margin: '0 auto 16px auto' }}></div>
@@ -163,13 +163,13 @@ const MyBookingsPage = () => {
               return (
                 /* VIP Digital Ticket Card */
                 <div key={booking.id} style={{ display: 'flex', flexWrap: 'wrap', backgroundColor: '#fff', borderRadius: '20px', boxShadow: '0 20px 40px rgba(0,0,0,0.06)', overflow: 'hidden', position: 'relative' }}>
-                  
+
                   {/* Left Side: Image & Brand */}
                   <div style={{ flex: '1 1 300px', position: 'relative', minHeight: '280px', overflow: 'hidden', background: 'linear-gradient(135deg, #0f172a, #334155)' }}>
                     <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(15,23,42,0.15) 0%, rgba(15,23,42,0.05) 35%, rgba(15,23,42,0.82) 100%)', zIndex: 1 }}></div>
                     <BikeImage
                       src={booking.image_url}
-                      alt={booking.bike_name} 
+                      alt={booking.bike_name}
                       style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
                     />
                     <div style={{ position: 'absolute', inset: 0, boxSizing: 'border-box', zIndex: 2, padding: '24px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
@@ -219,24 +219,24 @@ const MyBookingsPage = () => {
                   {/* Right Side: Ticket Stub / Actions */}
                   <div style={{ flex: '1 1 200px', padding: '30px 24px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', backgroundColor: '#fdfdfd' }}>
                     <div style={{ padding: '8px', backgroundColor: '#fff', border: '1px solid #e2e8f0', borderRadius: '12px', marginBottom: '20px', boxShadow: '0 4px 6px rgba(0,0,0,0.05)' }}>
-                      <img 
-                        src={`https://api.qrserver.com/v1/create-qr-code/?size=400x400&margin=10&data=${qrData}`} 
-                        alt="Scan for Details" 
+                      <img
+                        src={`https://api.qrserver.com/v1/create-qr-code/?size=400x400&margin=10&data=${qrData}`}
+                        alt="Scan for Details"
                         style={{ width: '70px', height: '70px', display: 'block' }}
                       />
                     </div>
                     <p style={{ fontSize: '11px', color: '#94a3b8', fontWeight: 700, letterSpacing: '2px', marginBottom: '24px' }}>ID: BR-{booking.id}9X</p>
-                    
-                    <button 
-                      onClick={() => setSelectedInvoice(booking)} 
+
+                    <button
+                      onClick={() => setSelectedInvoice(booking)}
                       style={{ width: '100%', padding: '10px 0', backgroundColor: '#0f172a', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '13px', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', marginBottom: isActive ? '10px' : '0', transition: 'background-color 0.2s' }}
                     >
                       <Download size={14} /> Receipt
                     </button>
 
                     {isActive && (
-                      <button 
-                        onClick={() => handleCancelBooking(booking.id)} 
+                      <button
+                        onClick={() => handleCancelBooking(booking.id)}
                         style={{ width: '100%', padding: '10px 0', backgroundColor: '#fff1f2', color: '#e11d48', border: '1px solid #ffe4e6', borderRadius: '8px', fontSize: '13px', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', transition: 'background-color 0.2s' }}
                       >
                         <Trash2 size={14} /> Cancel
@@ -252,14 +252,14 @@ const MyBookingsPage = () => {
         {/* Improved Modal with Automatic PDF Download */}
         {selectedInvoice && (
           <div style={{ position: 'fixed', inset: 0, boxSizing: 'border-box', zIndex: 9999, display: 'flex', justifyContent: 'center', alignItems: 'flex-start', backdropFilter: 'blur(8px)', backgroundColor: 'rgba(15, 23, 42, 0.8)', overflowY: 'auto', padding: '82px 20px 18px' }}>
-            
+
             <div style={{ width: '100%', maxWidth: '550px', position: 'relative', animation: 'fadeInUp 0.3s ease-out', margin: '0 auto', flexShrink: 0 }}>
 
               {/* The Ultra-Premium Receipt element that gets converted to PDF */}
               <div id="invoice-receipt-card" style={{ background: '#fff', color: '#1e293b', borderRadius: '16px', overflow: 'hidden', boxShadow: '0 25px 50px rgba(0,0,0,0.25)', position: 'relative' }}>
-                
+
                 {/* Close Button Inside Receipt Corner */}
-                <button 
+                <button
                   onClick={() => setSelectedInvoice(null)}
                   data-html2canvas-ignore="true"
                   style={{ position: 'absolute', top: '16px', right: '16px', background: 'rgba(255,255,255,0.1)', border: 'none', color: '#fff', cursor: 'pointer', zIndex: 100, display: 'flex', justifyContent: 'center', alignItems: 'center', width: '36px', height: '36px', borderRadius: '50%', transition: 'background-color 0.2s' }}
@@ -268,7 +268,7 @@ const MyBookingsPage = () => {
                 >
                   <XCircle size={24} />
                 </button>
-                
+
                 {/* Background Watermark */}
                 <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%) rotate(-30deg)', opacity: 0.03, pointerEvents: 'none', zIndex: 0 }}>
                   <Calendar size={320} color="#0f172a" />
@@ -290,7 +290,7 @@ const MyBookingsPage = () => {
                 </div>
 
                 <div style={{ padding: '22px 26px', position: 'relative', zIndex: 1 }}>
-                  
+
                   {/* Status Stamp */}
                   <div style={{ position: 'absolute', top: '16px', right: '30px', transform: 'rotate(15deg)', border: `4px solid ${selectedInvoice.status === 'Cancelled' ? '#ef4444' : '#10b981'}`, color: selectedInvoice.status === 'Cancelled' ? '#ef4444' : '#10b981', padding: '6px 20px', borderRadius: '10px', fontSize: '20px', fontWeight: 900, letterSpacing: '3px', opacity: 0.8 }}>
                     {selectedInvoice.status === 'Cancelled' ? 'CANCELLED' : (selectedInvoice.payment_status || 'PAID')}
@@ -317,14 +317,14 @@ const MyBookingsPage = () => {
                       <div style={{ flex: 1.5, fontSize: '11px', fontWeight: 800, color: '#64748b', textTransform: 'uppercase', letterSpacing: '1px', textAlign: 'center' }}>Dates</div>
                       <div style={{ flex: 1, fontSize: '11px', fontWeight: 800, color: '#64748b', textTransform: 'uppercase', letterSpacing: '1px', textAlign: 'right' }}>Total</div>
                     </div>
-                    
+
                     <div style={{ display: 'flex', padding: '16px 18px', alignItems: 'center' }}>
                       <div style={{ flex: 2 }}>
                         <p style={{ margin: '0 0 4px 0', fontSize: '15px', fontWeight: 900, color: '#0f172a' }}>{selectedInvoice.bike_name}</p>
                         <p style={{ margin: 0, fontSize: '12px', color: '#64748b' }}>Premium Rental</p>
                       </div>
                       <div style={{ flex: 1.5, textAlign: 'center', fontSize: '13px', fontWeight: 700, color: '#334155' }}>
-                        {selectedInvoice.booking_date} <br/> to <br/> {selectedInvoice.return_date || selectedInvoice.booking_date}
+                        {selectedInvoice.booking_date} <br /> to <br /> {selectedInvoice.return_date || selectedInvoice.booking_date}
                       </div>
                       <div style={{ flex: 1, textAlign: 'right', fontSize: '15px', fontWeight: 900, color: '#0f172a' }}>
                         ₹{selectedInvoice.total_price}
@@ -334,17 +334,17 @@ const MyBookingsPage = () => {
 
                   {/* Total Amount Section */}
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '22px' }}>
-                    
+
                     <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
                       <div style={{ padding: '6px', backgroundColor: '#fff', border: '1px solid #e2e8f0', borderRadius: '8px' }}>
-                        <img 
-                          src={`https://barcode.tec-it.com/barcode.ashx?data=BR-${selectedInvoice.id}9382X&code=Code128&translate-esc=on`} 
-                          alt="Barcode" 
+                        <img
+                          src={`https://barcode.tec-it.com/barcode.ashx?data=BR-${selectedInvoice.id}9382X&code=Code128&translate-esc=on`}
+                          alt="Barcode"
                           style={{ height: '34px', width: 'auto', display: 'block' }}
                         />
                       </div>
                       <div>
-                         <p style={{ fontSize: '10px', color: '#94a3b8', letterSpacing: '2px', margin: 0 }}>SCAN TO VERIFY</p>
+                        <p style={{ fontSize: '10px', color: '#94a3b8', letterSpacing: '2px', margin: 0 }}>SCAN TO VERIFY</p>
                       </div>
                     </div>
 
@@ -365,8 +365,8 @@ const MyBookingsPage = () => {
               </div>
 
               {/* Download Button (Outside the receipt so it doesn't print) */}
-              <button 
-                onClick={handleDownloadPDF} 
+              <button
+                onClick={handleDownloadPDF}
                 style={{ width: '100%', boxSizing: 'border-box', marginTop: '14px', padding: '14px', backgroundColor: '#ff5e14', color: '#fff', border: 'none', borderRadius: '12px', fontSize: '16px', fontWeight: 800, cursor: 'pointer', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '10px', boxShadow: '0 10px 20px rgba(255,94,20,0.3)', transition: 'transform 0.2s' }}
               >
                 <Download size={22} /> Download PDF Invoice

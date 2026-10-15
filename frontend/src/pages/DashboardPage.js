@@ -2,19 +2,21 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import client from '../api/client';
 import { useAuth } from '../context/AuthContext';
-import { 
-  Cloud, 
-  Home, 
-  Users, 
-  ClipboardList, 
-  Bike, 
-  LogOut, 
-  Trash2, 
-  DollarSign, 
-  Search, 
+import {
+  Cloud,
+  Home,
+  Users,
+  ClipboardList,
+  Bike,
+  LogOut,
+  Trash2,
+  DollarSign,
+  Search,
   CheckCircle,
   XCircle,
-  Edit
+  Edit,
+  Menu,
+  X
 } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, LineChart, Line, Tooltip } from 'recharts';
 import '../Dashboard.css'; // Import the new styles
@@ -27,7 +29,7 @@ const DashboardPage = () => {
   const navigate = useNavigate();
 
   const [activeTab, setActiveTab] = useState('overview');
-  
+
   const [stats, setStats] = useState(null);
   const [usersList, setUsersList] = useState([]);
   const [bookingsList, setBookingsList] = useState([]);
@@ -35,7 +37,7 @@ const DashboardPage = () => {
   const [loading, setLoading] = useState(true);
 
   const [bikeForm, setBikeForm] = useState({
-    bike_name: '', brand: '', model: '', price_per_day: '', availability: 'Available', 
+    bike_name: '', brand: '', model: '', price_per_day: '', availability: 'Available',
     image_url: '', engine: '', mileage: '', torque: '', fuel_tank: '', plate_number: ''
   });
   const [bikeLoading, setBikeLoading] = useState(false);
@@ -47,10 +49,11 @@ const DashboardPage = () => {
   const [bookingSearch, setBookingSearch] = useState('');
   const [bookingFilter, setBookingFilter] = useState('All');
   const [selectedUser, setSelectedUser] = useState(null);
-  
+
   const [showEditUserModal, setShowEditUserModal] = useState(false);
   const [editUserForm, setEditUserForm] = useState({ id: null, name: '', email: '', phone: '', role: '' });
   const [userLoading, setUserLoading] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
 
   const fetchDashboardData = async () => {
@@ -176,7 +179,7 @@ const DashboardPage = () => {
         toast.success('Bike added successfully!');
       }
       setBikeForm({
-        bike_name: '', brand: '', model: '', price_per_day: '', availability: 'Available', 
+        bike_name: '', brand: '', model: '', price_per_day: '', availability: 'Available',
         image_url: '', engine: '', mileage: '', torque: '', fuel_tank: '', plate_number: ''
       });
       setEditBikeId(null);
@@ -191,7 +194,7 @@ const DashboardPage = () => {
 
   const openAddModal = () => {
     setBikeForm({
-      bike_name: '', brand: '', model: '', price_per_day: '', availability: 'Available', 
+      bike_name: '', brand: '', model: '', price_per_day: '', availability: 'Available',
       image_url: '', engine: '', mileage: '', torque: '', fuel_tank: '', plate_number: ''
     });
     setEditBikeId(null);
@@ -200,9 +203,9 @@ const DashboardPage = () => {
 
   const openEditModal = (bike) => {
     setBikeForm({
-      bike_name: bike.bike_name || '', brand: bike.brand || '', model: bike.model || '', 
-      price_per_day: bike.price_per_day || '', availability: bike.availability || 'Available', 
-      image_url: bike.image_url || '', engine: bike.engine || '', mileage: bike.mileage || '', 
+      bike_name: bike.bike_name || '', brand: bike.brand || '', model: bike.model || '',
+      price_per_day: bike.price_per_day || '', availability: bike.availability || 'Available',
+      image_url: bike.image_url || '', engine: bike.engine || '', mileage: bike.mileage || '',
       torque: bike.torque || '', fuel_tank: bike.fuel_tank || '', plate_number: bike.plate_number || ''
     });
     setEditBikeId(bike.id);
@@ -221,13 +224,22 @@ const DashboardPage = () => {
   };
 
   const handleCancelBooking = async (bookingId) => {
-    if (!window.confirm("Are you sure you want to cancel this booking?")) return;
     try {
       await client.delete(`/cancel-booking/${bookingId}`);
       toast.success('Booking cancelled successfully.');
       fetchDashboardData();
     } catch (err) {
       toast.error("Failed to cancel booking: " + (err.response?.data?.detail || err.message));
+    }
+  };
+
+  const handleDeleteBooking = async (bookingId) => {
+    try {
+      await client.delete(`/delete-booking/${bookingId}`);
+      toast.success('Booking deleted successfully.');
+      fetchDashboardData();
+    } catch (err) {
+      toast.error("Failed to delete booking: " + (err.response?.data?.detail || err.message));
     }
   };
 
@@ -259,118 +271,119 @@ const DashboardPage = () => {
     const cancelledRentals = bookingsList.filter(b => b.status === 'Cancelled').length || 12;
 
     return (
-    <>
-      <div className="dash-cards-grid">
-        <div className="dash-card">
-          <div className="dash-icon-box purple">
-            <Users size={24} />
+      <>
+        <div className="dash-cards-grid">
+          <div className="dash-card">
+            <div className="dash-icon-box purple">
+              <Users size={24} />
+            </div>
+            <div className="dash-card-info">
+              <h4>Total Users</h4>
+              <h2>{stats?.total_users || 7}</h2>
+              <p>Active Members</p>
+            </div>
           </div>
-          <div className="dash-card-info">
-            <h4>Total Users</h4>
-            <h2>{stats?.total_users || 7}</h2>
-            <p>Active Members</p>
-          </div>
-        </div>
 
-        <div className="dash-card">
-          <div className="dash-icon-box green">
-            <Bike size={24} />
+          <div className="dash-card">
+            <div className="dash-icon-box green">
+              <Bike size={24} />
+            </div>
+            <div className="dash-card-info">
+              <h4>Total Bikes</h4>
+              <h2>{stats?.total_bikes || 2}</h2>
+              <p>Live Inventory</p>
+            </div>
           </div>
-          <div className="dash-card-info">
-            <h4>Total Bikes</h4>
-            <h2>{stats?.total_bikes || 2}</h2>
-            <p>Live Inventory</p>
-          </div>
-        </div>
 
-        <div className="dash-card">
-          <div className="dash-icon-box orange">
-            <ClipboardList size={24} />
+          <div className="dash-card">
+            <div className="dash-icon-box orange">
+              <ClipboardList size={24} />
+            </div>
+            <div className="dash-card-info">
+              <h4>Active Rentals</h4>
+              <h2>{activeRentals || 0}</h2>
+              <p>Currently Out</p>
+            </div>
           </div>
-          <div className="dash-card-info">
-            <h4>Active Rentals</h4>
-            <h2>{activeRentals || 0}</h2>
-            <p>Currently Out</p>
-          </div>
-        </div>
 
-        <div className="dash-card">
-          <div className="dash-icon-box pink">
-            <DollarSign size={24} />
-          </div>
-          <div className="dash-card-info">
-            <h4>Total Revenue</h4>
-            <h2>₹{stats?.total_revenue || 18450}</h2>
-            <p>Gross Earnings</p>
-          </div>
-        </div>
-      </div>
-
-      <div className="dash-charts-grid">
-        <div className="dash-chart-card">
-          <h4>Revenue Analytics (Monthly)</h4>
-          <div style={{ height: 250, width: '100%' }}>
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={[{ name: 'May', revenue: 750 }]}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
-                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#64748b', fontSize: 12}} />
-                <YAxis axisLine={false} tickLine={false} tick={{fill: '#64748b', fontSize: 12}} />
-                <Tooltip cursor={{fill: '#f1f5f9'}} />
-                <Bar dataKey="revenue" fill="#4f46e5" radius={[4, 4, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-        
-        <div className="dash-chart-card">
-          <h4>Weekly Performance</h4>
-          <div style={{ height: 250, width: '100%' }}>
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={[
-                { name: 'Mon', val: 0 }, { name: 'Tue', val: 0 }, { name: 'Wed', val: 0 },
-                { name: 'Thu', val: 750 }, { name: 'Fri', val: 0 }, { name: 'Sat', val: 0 }, { name: 'Sun', val: 0 }
-              ]}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
-                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#64748b', fontSize: 12}} />
-                <YAxis axisLine={false} tickLine={false} tick={{fill: '#64748b', fontSize: 12}} />
-                <Tooltip />
-                <Line type="monotone" dataKey="val" stroke="#10b981" strokeWidth={3} dot={{fill: '#fff', stroke: '#10b981', strokeWidth: 2, r: 4}} activeDot={{r: 6}} />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-      </div>
-
-      <div className="dash-bottom-grid">
-        <div className="dash-bottom-card">
-          <p className="dash-bottom-card-title">Most Booked Bike</p>
-          <h3 className="dash-bottom-card-value">Hutter</h3>
-        </div>
-        <div className="dash-bottom-card">
-          <p className="dash-bottom-card-title">Peak Booking Day</p>
-          <h3 className="dash-bottom-card-value">Thu</h3>
-        </div>
-        <div className="dash-bottom-card">
-          <p className="dash-bottom-card-title">Cancelled Rentals</p>
-          <h3 className="dash-bottom-card-value red">{cancelledRentals}</h3>
-        </div>
-        <div className="dash-bottom-card dash-notifications">
-          <div className="dash-notif-header">
-            <h4><span style={{color: '#f59e0b'}}>🔔</span> Notifications</h4>
-            <span className="dash-notif-badge">10 New</span>
-          </div>
-          <div className="dash-notif-item">
-            <div className="dash-notif-icon">!</div>
-            <div className="dash-notif-content">
-              <h5>Booking Cancelled</h5>
-              <p>pankaj reserved Hutter</p>
-              <span>2026-05-20</span>
+          <div className="dash-card">
+            <div className="dash-icon-box pink">
+              <DollarSign size={24} />
+            </div>
+            <div className="dash-card-info">
+              <h4>Total Revenue</h4>
+              <h2>₹{stats?.total_revenue || 18450}</h2>
+              <p>Gross Earnings</p>
             </div>
           </div>
         </div>
-      </div>
-    </>
-  )};
+
+        <div className="dash-charts-grid">
+          <div className="dash-chart-card">
+            <h4>Revenue Analytics (Monthly)</h4>
+            <div style={{ height: 250, width: '100%' }}>
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={[{ name: 'May', revenue: 750 }]}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                  <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#64748b', fontSize: 12 }} />
+                  <YAxis axisLine={false} tickLine={false} tick={{ fill: '#64748b', fontSize: 12 }} />
+                  <Tooltip cursor={{ fill: '#f1f5f9' }} />
+                  <Bar dataKey="revenue" fill="#4f46e5" radius={[4, 4, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+          <div className="dash-chart-card">
+            <h4>Weekly Performance</h4>
+            <div style={{ height: 250, width: '100%' }}>
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={[
+                  { name: 'Mon', val: 0 }, { name: 'Tue', val: 0 }, { name: 'Wed', val: 0 },
+                  { name: 'Thu', val: 750 }, { name: 'Fri', val: 0 }, { name: 'Sat', val: 0 }, { name: 'Sun', val: 0 }
+                ]}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                  <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#64748b', fontSize: 12 }} />
+                  <YAxis axisLine={false} tickLine={false} tick={{ fill: '#64748b', fontSize: 12 }} />
+                  <Tooltip />
+                  <Line type="monotone" dataKey="val" stroke="#10b981" strokeWidth={3} dot={{ fill: '#fff', stroke: '#10b981', strokeWidth: 2, r: 4 }} activeDot={{ r: 6 }} />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        </div>
+
+        <div className="dash-bottom-grid">
+          <div className="dash-bottom-card">
+            <p className="dash-bottom-card-title">Most Booked Bike</p>
+            <h3 className="dash-bottom-card-value">Hutter</h3>
+          </div>
+          <div className="dash-bottom-card">
+            <p className="dash-bottom-card-title">Peak Booking Day</p>
+            <h3 className="dash-bottom-card-value">Thu</h3>
+          </div>
+          <div className="dash-bottom-card">
+            <p className="dash-bottom-card-title">Cancelled Rentals</p>
+            <h3 className="dash-bottom-card-value red">{cancelledRentals}</h3>
+          </div>
+          <div className="dash-bottom-card dash-notifications">
+            <div className="dash-notif-header">
+              <h4><span style={{ color: '#f59e0b' }}>🔔</span> Notifications</h4>
+              <span className="dash-notif-badge">10 New</span>
+            </div>
+            <div className="dash-notif-item">
+              <div className="dash-notif-icon">!</div>
+              <div className="dash-notif-content">
+                <h5>Booking Cancelled</h5>
+                <p>pankaj reserved Hutter</p>
+                <span>2026-05-20</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </>
+    )
+  };
 
   const renderUsers = () => (
     <div className="dash-table-container">
@@ -380,7 +393,7 @@ const DashboardPage = () => {
           Total: {usersList.length}
         </div>
       </div>
-      
+
       <table className="dash-table">
         <thead>
           <tr>
@@ -428,59 +441,59 @@ const DashboardPage = () => {
               <h3 style={{ margin: 0, fontSize: '18px', fontWeight: 800 }}>User Profile: {selectedUser.name}</h3>
               <button onClick={() => setSelectedUser(null)} aria-label="Close user profile" style={{ background: 'transparent', border: 'none', fontSize: '22px', cursor: 'pointer', color: '#fff', padding: '0 2px', lineHeight: 1 }}>×</button>
             </div>
-            
-            <div style={{ padding: '20px 24px 22px' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: '190px minmax(0, 1fr)', gap: '24px', marginBottom: '22px' }}>
-              <div>
-                {selectedUser.profile_photo ? (
-                  <img src={selectedUser.profile_photo} alt="Profile" style={{ width: '100%', height: '190px', borderRadius: '12px', objectFit: 'cover', border: '1px solid #e2e8f0' }} />
-                ) : (
-                    <div style={{ width: '100%', height: '190px', borderRadius: '12px', background: '#e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '42px', color: '#94a3b8' }}>
-                    {selectedUser.name.charAt(0).toUpperCase()}
-                  </div>
-                )}
-                <div style={{ marginTop: '10px', textAlign: 'center' }}>
-                  <span style={{ display: 'inline-block', padding: '7px 16px', borderRadius: '20px', fontSize: '13px', fontWeight: 700, background: selectedUser.admin_verified ? '#dcfce7' : '#fee2e2', color: selectedUser.admin_verified ? '#16a34a' : '#ef4444' }}>
-                    {selectedUser.admin_verified ? 'Verified by Admin' : 'Unverified'}
-                  </span>
-                </div>
-              </div>
-              <div style={{ display: 'flex', flexDirection: 'column', fontSize: '14px', color: '#334155' }}>
-                <div style={{ display: 'grid', gridTemplateColumns: '125px 14px minmax(0, 1fr)', alignItems: 'center', gap: '8px', minHeight: '42px', borderBottom: '1px solid #e8edf4' }}><strong style={{ color: '#475569' }}>Email</strong><span style={{ color: '#94a3b8' }}>:</span><span style={{ overflowWrap: 'anywhere' }}>{selectedUser.email}</span></div>
-                <div style={{ display: 'grid', gridTemplateColumns: '125px 14px minmax(0, 1fr)', alignItems: 'center', gap: '8px', minHeight: '42px', borderBottom: '1px solid #e8edf4' }}><strong style={{ color: '#475569' }}>Phone</strong><span style={{ color: '#94a3b8' }}>:</span><span>{selectedUser.phone || 'N/A'}</span></div>
-                <div style={{ display: 'grid', gridTemplateColumns: '125px 14px minmax(0, 1fr)', alignItems: 'center', gap: '8px', minHeight: '42px', borderBottom: '1px solid #e8edf4' }}><strong style={{ color: '#475569' }}>Address</strong><span style={{ color: '#94a3b8' }}>:</span><span>{selectedUser.address || 'N/A'}</span></div>
-                <div style={{ display: 'grid', gridTemplateColumns: '125px 14px minmax(0, 1fr)', alignItems: 'center', gap: '8px', minHeight: '42px', borderBottom: '1px solid #e8edf4' }}><strong style={{ color: '#475569' }}>Role</strong><span style={{ color: '#94a3b8' }}>:</span><span style={{ display: 'inline-flex', width: 'fit-content', padding: '5px 14px', borderRadius: '18px', background: '#eaf1ff', color: '#3478f6', fontWeight: 700, textTransform: 'capitalize' }}>{selectedUser.role}</span></div>
-                
-                <div style={{ marginTop: '12px', display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
-                  {selectedUser.aadhaar_doc && (
-                    <a href={selectedUser.aadhaar_doc} target="_blank" rel="noreferrer" style={{ padding: '9px 14px', background: '#eaf1ff', borderRadius: '8px', textDecoration: 'none', color: '#3478f6', fontSize: '13px', fontWeight: 700 }}>View Aadhaar Doc</a>
-                  )}
-                  {selectedUser.pan_card && (
-                    <a href={selectedUser.pan_card} target="_blank" rel="noreferrer" style={{ padding: '9px 14px', background: '#eaf1ff', borderRadius: '8px', textDecoration: 'none', color: '#3478f6', fontSize: '13px', fontWeight: 700 }}>View PAN Card</a>
-                  )}
-                </div>
-              </div>
-            </div>
 
-            <div style={{ marginTop: '16px', display: 'flex', flexWrap: 'wrap', justifyContent: 'flex-end', gap: '10px', borderTop: '1px solid #e2e8f0', paddingTop: '14px' }}>
-              {selectedUser.role !== 'admin' && (
-                <button onClick={() => { setSelectedUser(null); openEditUserModal(selectedUser); }} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 20px', background: '#3b82f6', color: '#fff', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}>
-                  <Edit size={18} /> Edit User
+            <div style={{ padding: '20px 24px 22px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '190px minmax(0, 1fr)', gap: '24px', marginBottom: '22px' }}>
+                <div>
+                  {selectedUser.profile_photo ? (
+                    <img src={selectedUser.profile_photo} alt="Profile" style={{ width: '100%', height: '190px', borderRadius: '12px', objectFit: 'cover', border: '1px solid #e2e8f0' }} />
+                  ) : (
+                    <div style={{ width: '100%', height: '190px', borderRadius: '12px', background: '#e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '42px', color: '#94a3b8' }}>
+                      {selectedUser.name.charAt(0).toUpperCase()}
+                    </div>
+                  )}
+                  <div style={{ marginTop: '10px', textAlign: 'center' }}>
+                    <span style={{ display: 'inline-block', padding: '7px 16px', borderRadius: '20px', fontSize: '13px', fontWeight: 700, background: selectedUser.admin_verified ? '#dcfce7' : '#fee2e2', color: selectedUser.admin_verified ? '#16a34a' : '#ef4444' }}>
+                      {selectedUser.admin_verified ? 'Verified by Admin' : 'Unverified'}
+                    </span>
+                  </div>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', fontSize: '14px', color: '#334155' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: '125px 14px minmax(0, 1fr)', alignItems: 'center', gap: '8px', minHeight: '42px', borderBottom: '1px solid #e8edf4' }}><strong style={{ color: '#475569' }}>Email</strong><span style={{ color: '#94a3b8' }}>:</span><span style={{ overflowWrap: 'anywhere' }}>{selectedUser.email}</span></div>
+                  <div style={{ display: 'grid', gridTemplateColumns: '125px 14px minmax(0, 1fr)', alignItems: 'center', gap: '8px', minHeight: '42px', borderBottom: '1px solid #e8edf4' }}><strong style={{ color: '#475569' }}>Phone</strong><span style={{ color: '#94a3b8' }}>:</span><span>{selectedUser.phone || 'N/A'}</span></div>
+                  <div style={{ display: 'grid', gridTemplateColumns: '125px 14px minmax(0, 1fr)', alignItems: 'center', gap: '8px', minHeight: '42px', borderBottom: '1px solid #e8edf4' }}><strong style={{ color: '#475569' }}>Address</strong><span style={{ color: '#94a3b8' }}>:</span><span>{selectedUser.address || 'N/A'}</span></div>
+                  <div style={{ display: 'grid', gridTemplateColumns: '125px 14px minmax(0, 1fr)', alignItems: 'center', gap: '8px', minHeight: '42px', borderBottom: '1px solid #e8edf4' }}><strong style={{ color: '#475569' }}>Role</strong><span style={{ color: '#94a3b8' }}>:</span><span style={{ display: 'inline-flex', width: 'fit-content', padding: '5px 14px', borderRadius: '18px', background: '#eaf1ff', color: '#3478f6', fontWeight: 700, textTransform: 'capitalize' }}>{selectedUser.role}</span></div>
+
+                  <div style={{ marginTop: '12px', display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+                    {selectedUser.aadhaar_doc && (
+                      <a href={selectedUser.aadhaar_doc} target="_blank" rel="noreferrer" style={{ padding: '9px 14px', background: '#eaf1ff', borderRadius: '8px', textDecoration: 'none', color: '#3478f6', fontSize: '13px', fontWeight: 700 }}>View Aadhaar Doc</a>
+                    )}
+                    {selectedUser.pan_card && (
+                      <a href={selectedUser.pan_card} target="_blank" rel="noreferrer" style={{ padding: '9px 14px', background: '#eaf1ff', borderRadius: '8px', textDecoration: 'none', color: '#3478f6', fontSize: '13px', fontWeight: 700 }}>View PAN Card</a>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              <div style={{ marginTop: '16px', display: 'flex', flexWrap: 'wrap', justifyContent: 'flex-end', gap: '10px', borderTop: '1px solid #e2e8f0', paddingTop: '14px' }}>
+                {selectedUser.role !== 'admin' && (
+                  <button onClick={() => { setSelectedUser(null); openEditUserModal(selectedUser); }} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 20px', background: '#3b82f6', color: '#fff', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}>
+                    <Edit size={18} /> Edit User
+                  </button>
+                )}
+                {!selectedUser.admin_verified ? (
+                  <button onClick={() => handleVerifyUser(selectedUser.id, 'verify')} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 20px', background: '#10b981', color: '#fff', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}>
+                    <CheckCircle size={18} /> Verify User
+                  </button>
+                ) : (
+                  <button onClick={() => handleVerifyUser(selectedUser.id, 'unverify')} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 20px', background: '#ef4444', color: '#fff', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}>
+                    <XCircle size={18} /> Unverify User
+                  </button>
+                )}
+                <button onClick={() => setSelectedUser(null)} style={{ padding: '10px 20px', background: '#f1f5f9', color: '#334155', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}>
+                  Close
                 </button>
-              )}
-              {!selectedUser.admin_verified ? (
-                <button onClick={() => handleVerifyUser(selectedUser.id, 'verify')} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 20px', background: '#10b981', color: '#fff', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}>
-                  <CheckCircle size={18} /> Verify User
-                </button>
-              ) : (
-                <button onClick={() => handleVerifyUser(selectedUser.id, 'unverify')} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 20px', background: '#ef4444', color: '#fff', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}>
-                  <XCircle size={18} /> Unverify User
-                </button>
-              )}
-              <button onClick={() => setSelectedUser(null)} style={{ padding: '10px 20px', background: '#f1f5f9', color: '#334155', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}>
-                Close
-              </button>
-            </div>
+              </div>
             </div>
           </div>
         </div>
@@ -493,12 +506,12 @@ const DashboardPage = () => {
               <h3 style={{ margin: 0 }}>Edit User</h3>
               <button onClick={() => setShowEditUserModal(false)} style={{ background: 'transparent', border: 'none', fontSize: '20px', cursor: 'pointer', color: '#64748b' }}>×</button>
             </div>
-            
+
             <form onSubmit={handleEditUserSubmit} noValidate style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <input value={editUserForm.name} maxLength={100} onChange={(e) => setEditUserForm({...editUserForm, name: e.target.value})} placeholder="Name" required style={{ padding: '12px', borderRadius: '8px', border: '1px solid #e2e8f0', fontSize: '14px', outline: 'none' }} />
-              <input type="email" value={editUserForm.email} maxLength={254} onChange={(e) => setEditUserForm({...editUserForm, email: e.target.value})} placeholder="Email" required style={{ padding: '12px', borderRadius: '8px', border: '1px solid #e2e8f0', fontSize: '14px', outline: 'none' }} />
-              <input type="tel" inputMode="numeric" maxLength={10} pattern="[0-9]{10}" title="Enter a 10-digit Indian mobile number" value={editUserForm.phone} onChange={(e) => setEditUserForm({...editUserForm, phone: e.target.value.replace(/\D/g, '').slice(0, 10)})} placeholder="10-digit phone (optional)" style={{ padding: '12px', borderRadius: '8px', border: '1px solid #e2e8f0', fontSize: '14px', outline: 'none' }} />
-              <select value={editUserForm.role} onChange={(e) => setEditUserForm({...editUserForm, role: e.target.value})} style={{ padding: '12px', borderRadius: '8px', border: '1px solid #e2e8f0', fontSize: '14px', background: '#fff', outline: 'none' }}>
+              <input value={editUserForm.name} maxLength={100} onChange={(e) => setEditUserForm({ ...editUserForm, name: e.target.value })} placeholder="Name" required style={{ padding: '12px', borderRadius: '8px', border: '1px solid #e2e8f0', fontSize: '14px', outline: 'none' }} />
+              <input type="email" value={editUserForm.email} maxLength={254} onChange={(e) => setEditUserForm({ ...editUserForm, email: e.target.value })} placeholder="Email" required style={{ padding: '12px', borderRadius: '8px', border: '1px solid #e2e8f0', fontSize: '14px', outline: 'none' }} />
+              <input type="tel" inputMode="numeric" maxLength={10} pattern="[0-9]{10}" title="Enter a 10-digit Indian mobile number" value={editUserForm.phone} onChange={(e) => setEditUserForm({ ...editUserForm, phone: e.target.value.replace(/\D/g, '').slice(0, 10) })} placeholder="10-digit phone (optional)" style={{ padding: '12px', borderRadius: '8px', border: '1px solid #e2e8f0', fontSize: '14px', outline: 'none' }} />
+              <select value={editUserForm.role} onChange={(e) => setEditUserForm({ ...editUserForm, role: e.target.value })} style={{ padding: '12px', borderRadius: '8px', border: '1px solid #e2e8f0', fontSize: '14px', background: '#fff', outline: 'none' }}>
                 <option value="user">User</option>
                 <option value="admin">Admin</option>
               </select>
@@ -515,89 +528,107 @@ const DashboardPage = () => {
 
   const renderBookings = () => {
     const filteredBookings = bookingsList.filter(b => {
-      const matchesSearch = 
+      const matchesSearch =
         (b.user_name || '').toLowerCase().includes(bookingSearch.toLowerCase()) ||
         (b.user_email || '').toLowerCase().includes(bookingSearch.toLowerCase()) ||
         (b.bike_name || '').toLowerCase().includes(bookingSearch.toLowerCase());
-      
+
       const matchesFilter = bookingFilter === 'All' || b.status === bookingFilter;
-      
+
       return matchesSearch && matchesFilter;
     });
 
     return (
-    <div className="dash-table-container">
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-        <h3 style={{ margin: 0 }}>All Bookings</h3>
-        <div style={{ display: 'flex', gap: '12px' }}>
-          <div style={{ position: 'relative' }}>
-            <Search size={16} style={{ position: 'absolute', left: '12px', top: '10px', color: '#94a3b8' }} />
-            <input 
-              type="text" 
-              maxLength={100}
-              placeholder="Search name, email, bike..." 
-              value={bookingSearch}
-              onChange={(e) => setBookingSearch(e.target.value)}
-              style={{ padding: '8px 12px 8px 36px', borderRadius: '8px', border: '1px solid #e2e8f0', fontSize: '13px', outline: 'none' }} 
-            />
+      <div className="dash-table-container">
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+          <h3 style={{ margin: 0 }}>All Bookings</h3>
+          <div style={{ display: 'flex', gap: '12px' }}>
+            <div style={{ position: 'relative' }}>
+              <Search size={16} style={{ position: 'absolute', left: '12px', top: '10px', color: '#94a3b8' }} />
+              <input
+                type="text"
+                maxLength={100}
+                placeholder="Search name, email, bike..."
+                value={bookingSearch}
+                onChange={(e) => setBookingSearch(e.target.value)}
+                style={{ padding: '8px 12px 8px 36px', borderRadius: '8px', border: '1px solid #e2e8f0', fontSize: '13px', outline: 'none' }}
+              />
+            </div>
+            <select
+              value={bookingFilter}
+              onChange={(e) => setBookingFilter(e.target.value)}
+              style={{ padding: '8px 16px', borderRadius: '8px', border: '1px solid #e2e8f0', background: '#fff', fontSize: '13px', cursor: 'pointer', color: '#64748b', outline: 'none' }}
+            >
+              <option value="All">All Status</option>
+              <option value="Booked">Booked</option>
+              <option value="Cancelled">Cancelled</option>
+              <option value="Completed">Completed</option>
+            </select>
           </div>
-          <select 
-            value={bookingFilter}
-            onChange={(e) => setBookingFilter(e.target.value)}
-            style={{ padding: '8px 16px', borderRadius: '8px', border: '1px solid #e2e8f0', background: '#fff', fontSize: '13px', cursor: 'pointer', color: '#64748b', outline: 'none' }}
-          >
-            <option value="All">All Status</option>
-            <option value="Booked">Booked</option>
-            <option value="Cancelled">Cancelled</option>
-            <option value="Completed">Completed</option>
-          </select>
         </div>
-      </div>
-      
-      <table className="dash-table">
-        <thead>
-          <tr>
-            <th>Customer Name</th>
-            <th>Bike</th>
-            <th>Book Date</th>
-            <th>Return Date</th>
-            <th>Total Price</th>
-            <th>Status</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredBookings.map(b => (
-            <tr key={b.id}>
-              <td>
-                <div style={{ display: 'flex', flexDirection: 'column' }}>
-                  <strong>{b.user_name}</strong>
-                  <span style={{ fontSize: '11px', color: '#94a3b8' }}>{b.user_email}</span>
-                </div>
-              </td>
-              <td>{b.bike_name}</td>
-              <td>{b.booking_date}</td>
-              <td>{b.return_date || 'N/A'}</td>
-              <td><strong>₹{b.total_price}</strong></td>
-              <td>
-                <span className={`status-badge status-${b.status.toLowerCase()}`}>
-                  {b.status}
-                </span>
-              </td>
-              <td>
-                <button className="dash-action-btn" onClick={() => handleCancelBooking(b.id)} title="Cancel Booking">
-                  <Trash2 size={16} />
-                </button>
-              </td>
+
+        <table className="dash-table">
+          <thead>
+            <tr>
+              <th>Customer Name</th>
+              <th>Bike</th>
+              <th>Book Date</th>
+              <th>Return Date</th>
+              <th>Total Price</th>
+              <th>Status</th>
+              <th>Action</th>
             </tr>
-          ))}
-          {filteredBookings.length === 0 && (
-            <tr><td colSpan="7" style={{ textAlign: 'center' }}>No bookings found.</td></tr>
-          )}
-        </tbody>
-      </table>
-    </div>
-  )};
+          </thead>
+          <tbody>
+            {filteredBookings.map(b => (
+              <tr key={b.id}>
+                <td>
+                  <div style={{ display: 'flex', flexDirection: 'column' }}>
+                    <strong>{b.user_name}</strong>
+                    <span style={{ fontSize: '11px', color: '#94a3b8' }}>{b.user_email}</span>
+                  </div>
+                </td>
+                <td>{b.bike_name}</td>
+                <td>{b.booking_date}</td>
+                <td>{b.return_date || 'N/A'}</td>
+                <td><strong>₹{b.total_price}</strong></td>
+                <td>
+                  <span className={`status-badge status-${b.status.toLowerCase()}`}>
+                    {b.status}
+                  </span>
+                </td>
+                <td>
+                  <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                    {b.status === 'Booked' && (
+                      <button
+                        className="dash-action-btn"
+                        onClick={() => handleCancelBooking(b.id)}
+                        title="Cancel Booking"
+                        style={{ color: '#f59e0b', background: '#fef3c7' }}
+                      >
+                        <XCircle size={16} />
+                      </button>
+                    )}
+                    <button
+                      className="dash-action-btn"
+                      onClick={() => handleDeleteBooking(b.id)}
+                      title={b.status === 'Booked' ? 'Delete Booking Record' : 'Delete Booking'}
+                      style={{ color: '#ef4444' }}
+                    >
+                      <Trash2 size={16} />
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+            {filteredBookings.length === 0 && (
+              <tr><td colSpan="7" style={{ textAlign: 'center' }}>No bookings found.</td></tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+    )
+  };
 
   const renderBikes = () => {
     const filteredBikes = fleetBikes.filter(bike => {
@@ -645,10 +676,10 @@ const DashboardPage = () => {
                 <h3 style={{ margin: 0 }}>{editBikeId ? 'Edit Bike Details' : 'Add New Bike'}</h3>
                 <button onClick={() => { setShowAddBikeModal(false); setEditBikeId(null); }} style={{ background: 'transparent', border: 'none', fontSize: '20px', cursor: 'pointer', color: '#64748b' }}>×</button>
               </div>
-              
+
               <form onSubmit={handleAddBike} noValidate style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                 <input name="bike_name" maxLength={100} value={bikeForm.bike_name} onChange={handleBikeChange} placeholder="Bike Name" required style={{ padding: '12px', borderRadius: '8px', border: '1px solid #e2e8f0', fontSize: '14px', outline: 'none' }} />
-                
+
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
                   <input name="brand" maxLength={80} value={bikeForm.brand} onChange={handleBikeChange} placeholder="Brand" required style={{ padding: '12px', borderRadius: '8px', border: '1px solid #e2e8f0', fontSize: '14px', outline: 'none' }} />
                   <input name="model" maxLength={40} value={bikeForm.model} onChange={handleBikeChange} placeholder="Model" required style={{ padding: '12px', borderRadius: '8px', border: '1px solid #e2e8f0', fontSize: '14px', outline: 'none' }} />
@@ -756,7 +787,7 @@ const DashboardPage = () => {
   };
 
   const getPageTitle = () => {
-    switch(activeTab) {
+    switch (activeTab) {
       case 'overview': return 'Dashboard Overview';
       case 'users': return 'User Management';
       case 'bookings': return 'Booking Management';
@@ -771,24 +802,42 @@ const DashboardPage = () => {
 
   return (
     <div className="dash-layout">
-      {/* Left Sidebar */}
-      <div className="dash-sidebar">
+      {/* Mobile Backdrop Overlay */}
+      <div
+        className={`dash-sidebar-overlay ${mobileMenuOpen ? 'active' : ''}`}
+        onClick={() => setMobileMenuOpen(false)}
+      />
+
+      {/* Left Sidebar (Desktop & Mobile Drawer) */}
+      <div className={`dash-sidebar ${mobileMenuOpen ? 'open' : ''}`}>
         <div className="dash-logo">
           <Cloud color="#fff" size={28} />
           <h2>Bike Rental</h2>
         </div>
-        
+
         <div className="dash-nav">
-          <button className={`dash-nav-item ${activeTab === 'overview' ? 'active' : ''}`} onClick={() => setActiveTab('overview')}>
+          <button
+            className={`dash-nav-item ${activeTab === 'overview' ? 'active' : ''}`}
+            onClick={() => { setActiveTab('overview'); setMobileMenuOpen(false); }}
+          >
             <Home size={18} /> Overview
           </button>
-          <button className={`dash-nav-item ${activeTab === 'users' ? 'active' : ''}`} onClick={() => setActiveTab('users')}>
+          <button
+            className={`dash-nav-item ${activeTab === 'users' ? 'active' : ''}`}
+            onClick={() => { setActiveTab('users'); setMobileMenuOpen(false); }}
+          >
             <Users size={18} /> Users
           </button>
-          <button className={`dash-nav-item ${activeTab === 'bookings' ? 'active' : ''}`} onClick={() => setActiveTab('bookings')}>
+          <button
+            className={`dash-nav-item ${activeTab === 'bookings' ? 'active' : ''}`}
+            onClick={() => { setActiveTab('bookings'); setMobileMenuOpen(false); }}
+          >
             <ClipboardList size={18} /> Bookings
           </button>
-          <button className={`dash-nav-item ${activeTab === 'bikes' ? 'active' : ''}`} onClick={() => setActiveTab('bikes')}>
+          <button
+            className={`dash-nav-item ${activeTab === 'bikes' ? 'active' : ''}`}
+            onClick={() => { setActiveTab('bikes'); setMobileMenuOpen(false); }}
+          >
             <Bike size={18} /> Bikes
           </button>
         </div>
@@ -804,9 +853,18 @@ const DashboardPage = () => {
       <div className="dash-main">
         {/* Top Header */}
         <div className="dash-header">
-          <div>
-            <h1>{getPageTitle()}</h1>
-            <p>Welcome back {user?.name?.split(' ')[0] || 'Admin'} 👋</p>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+            <button
+              className="dash-mobile-menu-btn"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-label="Toggle Navigation Menu"
+            >
+              {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+            </button>
+            <div>
+              <h1>{getPageTitle()}</h1>
+              <p>Welcome back {user?.name?.split(' ')[0] || 'Admin'} 👋</p>
+            </div>
           </div>
           <div className="dash-profile">
             <strong>{user?.name || 'Krushna'}</strong>

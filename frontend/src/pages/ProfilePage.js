@@ -44,18 +44,18 @@ const ProfilePage = () => {
   const isKycComplete = user.aadhaar_number && user.address && user.phone && user.profile_photo && user.is_verified;
 
   return (
-    <div style={{ backgroundColor: '#f8fafc', minHeight: '100vh', padding: '60px 20px', color: '#1e293b' }}>
+    <div style={{ backgroundColor: '#f8fafc', minHeight: '100vh', padding: 'clamp(32px, 6vw, 60px) clamp(16px, 4vw, 24px)', color: '#1e293b' }}>
       <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
         
-        <div style={{ marginBottom: '40px' }}>
-          <h1 style={{ fontSize: '36px', fontWeight: 900, color: '#1e293b', marginBottom: '8px' }}>My Profile</h1>
-          <p style={{ fontSize: '16px', color: '#64748b' }}>Manage your account settings and KYC verification status.</p>
+        <div style={{ marginBottom: 'clamp(24px, 4vw, 40px)' }}>
+          <h1 style={{ fontSize: 'clamp(26px, 5vw, 36px)', fontWeight: 900, color: '#1e293b', marginBottom: '8px' }}>My Profile</h1>
+          <p style={{ fontSize: 'clamp(14px, 2.5vw, 16px)', color: '#64748b' }}>Manage your account settings and KYC verification status.</p>
         </div>
 
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '30px' }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '24px' }}>
           
           {/* Left Column - User Info & KYC */}
-          <div style={{ flex: '1 1 350px', display: 'flex', flexDirection: 'column', gap: '30px' }}>
+          <div style={{ flex: '1 1 min(100%, 320px)', display: 'flex', flexDirection: 'column', gap: '24px' }}>
             
             {/* User Card */}
             <div style={{ backgroundColor: '#fff', padding: '30px', borderRadius: '20px', boxShadow: '0 4px 20px rgba(0,0,0,0.05)', border: '1px solid #f1f5f9', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
@@ -100,8 +100,8 @@ const ProfilePage = () => {
           </div>
 
           {/* Right Column - Edit Profile Form */}
-          <div style={{ flex: '1 1 500px', backgroundColor: '#fff', padding: '40px', borderRadius: '20px', boxShadow: '0 4px 20px rgba(0,0,0,0.05)', border: '1px solid #f1f5f9' }}>
-            <h3 style={{ fontSize: '24px', fontWeight: 800, marginBottom: '30px' }}>Personal Details</h3>
+          <div style={{ flex: '1 1 min(100%, 480px)', backgroundColor: '#fff', padding: 'clamp(20px, 4vw, 40px)', borderRadius: '20px', boxShadow: '0 4px 20px rgba(0,0,0,0.05)', border: '1px solid #f1f5f9' }}>
+            <h3 style={{ fontSize: 'clamp(20px, 3.5vw, 24px)', fontWeight: 800, marginBottom: '24px' }}>Personal Details</h3>
             
             {message && (
               <div style={{ backgroundColor: '#dcfce3', color: '#10b981', padding: '12px 16px', borderRadius: '8px', marginBottom: '24px', fontWeight: 600, fontSize: '14px' }}>

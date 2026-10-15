@@ -18,9 +18,11 @@ import Navbar from "./components/Navbar";
 import { useAuth } from './context/AuthContext';
 import { Navigate } from 'react-router-dom';
 
-const ProtectedRoute = ({ children }) => {
+const ProtectedRoute = ({ children, adminOnly = false }) => {
   const { token, loading } = useAuth();
-  
+  const userStr = localStorage.getItem('user');
+  const userObj = userStr ? JSON.parse(userStr) : null;
+
   if (loading) {
     return (
       <div style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#0f172a', color: '#10b981' }}>
@@ -28,11 +30,15 @@ const ProtectedRoute = ({ children }) => {
       </div>
     );
   }
-  
+
   if (!token) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to={adminOnly ? "/admin" : "/login"} replace />;
   }
-  
+
+  if (adminOnly && userObj?.role !== 'admin') {
+    return <Navigate to="/" replace />;
+  }
+
   return children;
 };
 
@@ -52,7 +58,7 @@ function App() {
             <Route path="/about" element={<ProtectedRoute><AboutPage /></ProtectedRoute>} />
             <Route path="/contact" element={<ProtectedRoute><ContactPage /></ProtectedRoute>} />
             <Route path="/my-bookings" element={<ProtectedRoute><MyBookingsPage /></ProtectedRoute>} />
-            <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
+            <Route path="/dashboard" element={<ProtectedRoute adminOnly={true}><DashboardPage /></ProtectedRoute>} />
           </Routes>
         </Router>
       </AuthProvider>

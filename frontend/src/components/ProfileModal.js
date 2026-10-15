@@ -7,7 +7,7 @@ import { profileSchema, validateWithToast } from '../validation/schemas';
 
 const ProfileModal = ({ onClose }) => {
   const { user, updateProfile } = useAuth();
-  
+
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [address, setAddress] = useState('');
@@ -45,7 +45,7 @@ const ProfileModal = ({ onClose }) => {
   return (
     <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, zIndex: 9999, display: 'flex', justifyContent: 'center', alignItems: 'center', backdropFilter: 'blur(8px)', backgroundColor: 'rgba(15, 23, 42, 0.6)' }}>
       <div style={{ width: 'calc(100% - 32px)', maxWidth: '680px', backgroundColor: '#f8fafc', borderRadius: '20px', overflow: 'hidden', boxShadow: '0 24px 60px rgba(15,23,42,0.28)', position: 'relative', maxHeight: '88vh', overflowY: 'auto' }}>
-        
+
         {/* Header */}
         <div style={{ backgroundColor: '#0f172a', padding: '20px 26px', color: '#fff', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div>
@@ -58,10 +58,10 @@ const ProfileModal = ({ onClose }) => {
         </div>
 
         <div style={{ padding: '24px', display: 'flex', flexWrap: 'wrap', gap: '20px' }}>
-          
+
           {/* Left Column */}
           <div style={{ flex: '1 1 220px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
-            
+
             <div style={{ backgroundColor: '#fff', padding: '18px', borderRadius: '14px', boxShadow: '0 4px 10px rgba(0,0,0,0.03)', border: '1px solid #f1f5f9', textAlign: 'center' }}>
               <div style={{ width: '64px', height: '64px', borderRadius: '50%', backgroundColor: '#ff5e14', color: '#fff', display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '26px', fontWeight: 800, margin: '0 auto 12px auto' }}>
                 {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
@@ -95,19 +95,19 @@ const ProfileModal = ({ onClose }) => {
 
           {/* Right Column */}
           <div style={{ flex: '2 1 280px', backgroundColor: '#fff', padding: '22px', borderRadius: '14px', boxShadow: '0 4px 10px rgba(0,0,0,0.03)', border: '1px solid #f1f5f9' }}>
-            
+
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
               <h3 style={{ fontSize: '20px', fontWeight: 800, margin: 0 }}>Personal Details</h3>
               {!isEditing && (
-                <button 
-                  onClick={() => setIsEditing(true)} 
+                <button
+                  onClick={() => setIsEditing(true)}
                   style={{ padding: '8px 16px', backgroundColor: '#0f172a', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '13px', fontWeight: 700, cursor: 'pointer', transition: 'background-color 0.2s' }}
                 >
                   Edit Profile
                 </button>
               )}
             </div>
-            
+
             {message && (
               <div style={{ backgroundColor: '#dcfce3', color: '#10b981', padding: '10px 14px', borderRadius: '8px', marginBottom: '20px', fontWeight: 600, fontSize: '13px' }}>
                 {message}

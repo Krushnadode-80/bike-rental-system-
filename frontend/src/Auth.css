@@ -2,14 +2,13 @@
 
 .auth-split-layout {
   display: flex;
-  height: 100vh;
-  width: 100vw;
+  min-height: 100vh;
+  width: 100%;
   background-image: url('./Bike-Image.png');
   background-size: cover;
   background-position: center;
   color: #fff;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  overflow: hidden;
   position: relative;
 }
 
@@ -48,7 +47,6 @@
   margin-bottom: 60px;
   position: absolute;
   top: -120px;
-  /* Positioned relative to the centered content block */
 }
 
 .auth-logo h1 {
@@ -73,7 +71,7 @@
 }
 
 .auth-left h2 {
-  font-size: 80px;
+  font-size: clamp(48px, 6vw, 80px);
   font-weight: 900;
   line-height: 1.1;
   margin: 0 0 24px 0;
@@ -148,10 +146,11 @@
   border-radius: 24px;
   border: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow: 0 30px 60px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1);
+  box-sizing: border-box;
 }
 
 .auth-form-container h3 {
-  font-size: 32px;
+  font-size: clamp(24px, 5vw, 32px);
   font-weight: 800;
   margin: 0 0 8px 0;
   letter-spacing: -0.5px;
@@ -213,7 +212,6 @@
 
 .premium-input.active {
   background-color: #eff6ff;
-  /* Very light blue matching screenshot active state */
   color: #0f172a;
 }
 
@@ -296,15 +294,73 @@
   text-decoration: underline;
 }
 
-/* Responsiveness */
+/* Responsiveness for Tablets, Laptops & Mobile Phones */
 @media (max-width: 1024px) {
+  .auth-split-layout {
+    min-height: 100vh;
+    height: auto;
+    overflow-y: auto;
+    padding: clamp(24px, 5vw, 48px) 16px;
+    align-items: center;
+    justify-content: center;
+  }
+
   .auth-left {
     display: none;
   }
 
   .auth-right {
-    width: 100vw;
+    width: 100%;
+    max-width: 480px;
+    padding: 0;
+    margin: 0 auto;
     border-left: none;
+  }
+
+  .auth-form-container {
+    padding: clamp(24px, 5vw, 40px) clamp(18px, 4vw, 32px);
+    border-radius: 20px;
+  }
+
+  .auth-form-container h3 {
+    font-size: clamp(24px, 5vw, 30px);
   }
 }
 
+@media (max-width: 480px) {
+  .auth-form-container {
+    padding: 24px 16px;
+    border-radius: 16px;
+  }
+
+  .auth-form-container h3 {
+    font-size: 22px;
+  }
+
+  .auth-form-container p.subtitle {
+    font-size: 13px;
+    margin-bottom: 24px;
+  }
+
+  .terms-checkbox {
+    align-items: flex-start;
+    gap: 8px;
+    margin-top: 16px;
+    margin-bottom: 24px;
+  }
+
+  .terms-checkbox label {
+    font-size: 13px;
+    line-height: 1.4;
+  }
+
+  .premium-input {
+    padding: 14px 14px 14px 44px;
+    font-size: 14px;
+  }
+
+  .premium-btn {
+    padding: 15px;
+    font-size: 15px;
+  }
+}

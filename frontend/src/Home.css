@@ -651,5 +651,277 @@
   background: #64748b !important;
 }
 
+/* =========================================
+   RESPONSIVE LAYOUT ADJUSTMENTS ACROSS DEVICES
+   ========================================= */
+
+@media (max-width: 1024px) {
+  .home-hero {
+    padding: clamp(90px, 12vw, 120px) 24px clamp(110px, 14vw, 140px) 24px;
+  }
+
+  .home-hero h1 {
+    font-size: clamp(40px, 6vw, 56px);
+  }
+
+  .floating-filter-container {
+    width: calc(100% - 48px);
+    margin: -60px auto 40px auto;
+    padding: 24px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  .bikes-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+
+  .bikes-grid-container {
+    padding: 0 24px 50px 24px;
+  }
+
+  .booking-modal-wrapper {
+    max-width: 760px;
+    height: auto;
+    max-height: calc(100vh - 40px);
+  }
+
+  .booking-sidebar {
+    width: 260px;
+    padding: 30px 20px;
+  }
+
+  .booking-main-content {
+    padding: 36px 28px;
+  }
+}
+
+@media (max-width: 768px) {
+  .home-hero {
+    padding: 70px 20px 90px 20px;
+    text-align: center;
+    justify-content: center;
+  }
+
+  .home-hero-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .home-hero h1 {
+    font-size: clamp(32px, 8vw, 44px);
+    line-height: 1.15;
+    margin-bottom: 16px;
+  }
+
+  .home-hero p {
+    font-size: 15px;
+    margin: 0 auto 28px auto;
+  }
+
+  .hero-buttons {
+    flex-direction: column;
+    width: 100%;
+    max-width: 320px;
+    gap: 12px;
+  }
+
+  .btn-hero-primary,
+  .btn-hero-secondary {
+    width: 100%;
+    padding: 14px 20px;
+    text-align: center;
+    box-sizing: border-box;
+  }
+
+  .floating-filter-container {
+    width: calc(100% - 32px);
+    margin: -36px auto 36px auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    border-radius: 16px;
+  }
+
+  .filter-group {
+    width: 100%;
+  }
+
+  .section-title {
+    font-size: clamp(24px, 6vw, 32px);
+    margin-bottom: 32px;
+  }
+
+  .bikes-grid-container {
+    padding: 0 16px 40px 16px;
+  }
+
+  .bikes-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .bike-card-img-wrap {
+    height: 210px;
+  }
+
+  .bike-card-content {
+    padding: 20px;
+  }
+
+  /* Responsive Modal for Phone */
+  .booking-modal-overlay {
+    padding: 12px;
+    align-items: center;
+  }
+
+  .booking-modal-wrapper {
+    flex-direction: column;
+    height: auto;
+    max-height: 92vh;
+    border-radius: 16px;
+    overflow-y: auto;
+  }
+
+  .booking-sidebar {
+    width: 100%;
+    padding: 20px 20px 16px 20px;
+    box-sizing: border-box;
+  }
+
+  .booking-sidebar-header {
+    margin-bottom: 14px;
+    font-size: 18px;
+  }
+
+  .booking-toggle {
+    margin-bottom: 14px;
+  }
+
+  .booking-steps {
+    flex-direction: row;
+    gap: 12px;
+    padding-left: 0;
+    margin-bottom: 14px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 4px;
+  }
+
+  .booking-steps::before {
+    display: none;
+  }
+
+  .booking-step-item {
+    font-size: 13px;
+    white-space: nowrap;
+    padding: 4px 10px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .booking-step-item::before {
+    display: none;
+  }
+
+  .booking-sidebar-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 12px;
+    margin-top: 4px;
+  }
+
+  .booking-sidebar-total {
+    font-size: 24px;
+  }
+
+  .booking-main-content {
+    padding: 24px 18px;
+    overflow-y: visible;
+  }
+
+  .booking-close-btn {
+    top: 14px;
+    right: 14px;
+  }
+
+  .booking-main-title {
+    font-size: 22px;
+  }
+
+  .booking-main-subtitle {
+    font-size: 13px;
+    margin-bottom: 24px;
+  }
+
+  .cc-graphic {
+    padding: 20px;
+    border-radius: 14px;
+    margin-bottom: 24px;
+  }
+
+  .cc-number {
+    font-size: clamp(15px, 4.5vw, 20px);
+    letter-spacing: 2px;
+    margin-bottom: 18px;
+  }
+
+  .kyc-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .home-hero {
+    padding: 55px 14px 65px 14px;
+  }
+
+  .home-hero h1 {
+    font-size: clamp(26px, 7.5vw, 32px);
+  }
+
+  .floating-filter-container {
+    width: calc(100% - 20px);
+    padding: 16px;
+    margin: -25px auto 28px auto;
+  }
+
+  .bikes-grid-container {
+    padding: 0 12px 32px 12px;
+  }
+
+  .bike-card-content {
+    padding: 16px;
+  }
+
+  .specs-grid {
+    gap: 8px;
+  }
+
+  .spec-item {
+    padding: 6px 8px;
+  }
+
+  .bike-card-price {
+    font-size: 20px;
+    margin-bottom: 16px;
+  }
+
+  .btn-book {
+    padding: 13px;
+    font-size: 14px;
+  }
+}
+
+
+
+
+
+
 
 
