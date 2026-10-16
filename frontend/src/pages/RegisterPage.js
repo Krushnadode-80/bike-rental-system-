@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { User, Mail, Phone, Lock, Bike, Shield, Headphones, Eye, EyeOff } from 'lucide-react';
 import '../Auth.css'; // Import our new premium styles
@@ -9,6 +9,7 @@ import { registerSchema, validateWithToast } from '../validation/schemas';
 const RegisterPage = () => {
   const { register } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -35,8 +36,8 @@ const RegisterPage = () => {
     setLoading(true);
     try {
       await register(name, email, password);
-      toast.success('Account created successfully. Please sign in.');
-      navigate('/login'); // Redirect to Login Page
+      toast.success('Account created successfully. Please sign in to complete your booking.');
+      navigate('/login', { state: location.state }); // Redirect to Login Page
     } catch (err) {
       const message = typeof err === 'string' ? err : 'Registration failed.';
       setError(message);
@@ -90,6 +91,25 @@ const RegisterPage = () => {
         <div className="auth-form-container">
           <h3>Create Account</h3>
           <p className="subtitle">Start your journey with us in just a few steps.</p>
+
+          {location.state?.message && (
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px',
+              backgroundColor: 'rgba(255, 94, 20, 0.08)',
+              border: '1px solid rgba(255, 94, 20, 0.25)',
+              borderRadius: '10px',
+              padding: '12px 16px',
+              color: '#ff5e14',
+              fontSize: '14px',
+              fontWeight: 600,
+              marginBottom: '20px'
+            }}>
+              <Lock size={18} style={{ flexShrink: 0 }} />
+              <span>{location.state.message}</span>
+            </div>
+          )}
 
           {error && <div style={{ color: '#ef4444', marginBottom: '16px', fontSize: '14px' }}>{error}</div>}
 
@@ -183,7 +203,7 @@ const RegisterPage = () => {
             </button>
 
             <div className="auth-switch" style={{ marginTop: '16px' }}>
-              Already have an account? <Link to="/login" style={{ color: '#ff5e14' }}>Login here</Link>
+              Already have an account? <Link to="/login" state={location.state} style={{ color: '#ff5e14', fontWeight: '700' }}>Login here</Link>
             </div>
           </form>
         </div>

@@ -5,13 +5,7 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  // Require a fresh sign-in whenever the frontend starts instead of restoring
-  // a previous browser session from persistent storage.
-  const [token, setToken] = useState(() => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    return null;
-  });
+  const [token, setToken] = useState(() => localStorage.getItem('token'));
   const [loading, setLoading] = useState(true);
 
   // Fetch /me info to keep profile updated

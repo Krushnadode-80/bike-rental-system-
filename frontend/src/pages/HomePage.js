@@ -140,7 +140,14 @@ const HomePage = () => {
     if (!bike.availability.toLowerCase().includes('avail')) return;
 
     if (!user) {
-      navigate('/login');
+      toast.error('Please log in or sign up to book a bike.');
+      navigate('/login', {
+        state: {
+          from: '/',
+          bikeName: bike.bike_name,
+          message: `Please log in or sign up to book the ${bike.bike_name}.`
+        }
+      });
       return;
     }
     

@@ -9,7 +9,8 @@ import { loginSchema, validateWithToast } from '../validation/schemas';
 const LoginPage = () => {
   const { login, logout } = useAuth();
   const navigate = useNavigate();
-  const isAdminLogin = useLocation().pathname === '/admin';
+  const location = useLocation();
+  const isAdminLogin = location.pathname === '/admin';
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -49,7 +50,8 @@ const LoginPage = () => {
         navigate('/dashboard');
         return;
       }
-      navigate('/');
+      const returnTo = location.state?.from || '/';
+      navigate(returnTo);
     } catch (err) {
       const message = typeof err === 'string' ? err : 'Invalid credentials. Please try again.';
       setError(message);
@@ -107,6 +109,25 @@ const LoginPage = () => {
           <p className="subtitle">
             {isAdminLogin ? 'Sign in with your administrator account.' : 'Please enter your credentials to continue.'}
           </p>
+
+          {location.state?.message && !isAdminLogin && (
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px',
+              backgroundColor: 'rgba(255, 94, 20, 0.08)',
+              border: '1px solid rgba(255, 94, 20, 0.25)',
+              borderRadius: '10px',
+              padding: '12px 16px',
+              color: '#ff5e14',
+              fontSize: '14px',
+              fontWeight: 600,
+              marginBottom: '20px'
+            }}>
+              <Lock size={18} style={{ flexShrink: 0 }} />
+              <span>{location.state.message}</span>
+            </div>
+          )}
 
           {error && <div style={{ color: '#ef4444', marginBottom: '16px', fontSize: '14px' }}>{error}</div>}
 
@@ -169,7 +190,7 @@ const LoginPage = () => {
 
             {!isAdminLogin && (
               <div className="auth-switch">
-                Don't have an account? <Link to="/register" style={{ color: '#ff5e14' }}>Sign up</Link>
+                Don't have an account? <Link to="/register" state={location.state} style={{ color: '#ff5e14', fontWeight: '700' }}>Sign up</Link>
               </div>
             )}
           </form>

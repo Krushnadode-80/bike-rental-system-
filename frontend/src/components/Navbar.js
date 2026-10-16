@@ -43,9 +43,11 @@ const Navbar = () => {
         {/* Center Links (Desktop) */}
         <div className="main-navbar-center">
           <Link to="/" className={`main-nav-link ${location.pathname === '/' ? 'active' : ''}`}>Home</Link>
+          {user && user.role !== 'admin' && (
+            <Link to="/my-bookings" className={`main-nav-link ${location.pathname === '/my-bookings' ? 'active' : ''}`}>My Bookings</Link>
+          )}
           {user?.role !== 'admin' && (
             <>
-              <Link to="/my-bookings" className={`main-nav-link ${location.pathname === '/my-bookings' ? 'active' : ''}`}>My Bookings</Link>
               <Link to="/about" className={`main-nav-link ${location.pathname === '/about' ? 'active' : ''}`}>About</Link>
               <Link to="/contact" className={`main-nav-link ${location.pathname === '/contact' ? 'active' : ''}`}>Contact</Link>
             </>
@@ -91,11 +93,13 @@ const Navbar = () => {
           <Link to="/" className={`main-mobile-link ${location.pathname === '/' ? 'active' : ''}`} onClick={() => setMobileMenuOpen(false)}>
             Home
           </Link>
+          {user && user.role !== 'admin' && (
+            <Link to="/my-bookings" className={`main-mobile-link ${location.pathname === '/my-bookings' ? 'active' : ''}`} onClick={() => setMobileMenuOpen(false)}>
+              My Bookings
+            </Link>
+          )}
           {user?.role !== 'admin' && (
             <>
-              <Link to="/my-bookings" className={`main-mobile-link ${location.pathname === '/my-bookings' ? 'active' : ''}`} onClick={() => setMobileMenuOpen(false)}>
-                My Bookings
-              </Link>
               <Link to="/about" className={`main-mobile-link ${location.pathname === '/about' ? 'active' : ''}`} onClick={() => setMobileMenuOpen(false)}>
                 About
               </Link>
