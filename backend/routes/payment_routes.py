@@ -1,3 +1,21 @@
+# Ensure pkg_resources is available for razorpay in Python 3.12+ serverless environments
+try:
+    import pkg_resources
+except ImportError:
+    try:
+        import setuptools
+        import pkg_resources
+    except ImportError:
+        import sys
+        import types
+        pkg_resources_stub = types.ModuleType("pkg_resources")
+        class DistributionNotFound(Exception):
+            pass
+        pkg_resources_stub.DistributionNotFound = DistributionNotFound
+        pkg_resources_stub.require = lambda *args, **kwargs: [types.SimpleNamespace(version="1.4.1")]
+        pkg_resources_stub.get_distribution = lambda *args, **kwargs: types.SimpleNamespace(version="1.4.1")
+        sys.modules["pkg_resources"] = pkg_resources_stub
+
 import razorpay
 import os
 import qrcode

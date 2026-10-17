@@ -18,6 +18,23 @@ from models.bike_model import Bike
 from models.booking_model import Booking
 from seed_data import seed_database
 
+# Ensure pkg_resources is available for dependencies like razorpay in Python 3.12+
+try:
+    import pkg_resources
+except ImportError:
+    try:
+        import setuptools
+        import pkg_resources
+    except ImportError:
+        import sys, types
+        pkg_resources_stub = types.ModuleType("pkg_resources")
+        class DistributionNotFound(Exception):
+            pass
+        pkg_resources_stub.DistributionNotFound = DistributionNotFound
+        pkg_resources_stub.require = lambda *args, **kwargs: [types.SimpleNamespace(version="1.4.1")]
+        pkg_resources_stub.get_distribution = lambda *args, **kwargs: types.SimpleNamespace(version="1.4.1")
+        sys.modules["pkg_resources"] = pkg_resources_stub
+
 from routes.auth_routes import router as auth_router
 from routes.bike_routes import router as bike_router
 from routes.booking_routes import router as booking_router

@@ -21,6 +21,7 @@ python-jose[cryptography]==3.3.0   # JWT encoding and decoding
 # ==============================================================================
 # Payment Integration & QR Codes
 # ==============================================================================
+setuptools<81                      # Required for pkg_resources in Python 3.12 (used by razorpay)
 razorpay==1.4.1                    # Razorpay gateway API client
 qrcode==7.4.2                      # UPI payment dynamic QR code generation
 pillow==10.2.0                     # Image processing (Required by qrcode library to generate & save PNGs)

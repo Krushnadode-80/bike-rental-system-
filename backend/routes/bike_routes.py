@@ -38,9 +38,28 @@ from utils.rental_utils import auto_cleanup_rentals
 def get_bikes(
     db: Session = Depends(get_db)
 ):
-    auto_cleanup_rentals(db)
-    bikes = db.query(Bike).all()
-    return bikes
+    try:
+        auto_cleanup_rentals(db)
+    except Exception as e:
+        print(f"Cleanup non-fatal warning during get_bikes: {e}")
+
+    try:
+        bikes = db.query(Bike).all()
+        # If database was just provisioned on Neon and tables are empty, populate seed bikes
+        if not bikes:
+            try:
+                from seed_data import seed_database
+                seed_database()
+                bikes = db.query(Bike).all()
+            except Exception as seed_err:
+                print(f"Non-fatal auto-seed warning: {seed_err}")
+        return bikes
+    except Exception as e:
+        print(f"Database query error in get_bikes: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Database query error: {str(e)}. Please check DATABASE_URL in Vercel environment variables."
+        )
 
 @router.get("/bikes/{bike_id}")
 def get_bike(
