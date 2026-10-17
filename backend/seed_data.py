@@ -38,20 +38,28 @@ def seed_database():
         with open(bikes_file, "r") as f:
             bikes_data = json.load(f)
             
+        # Seed Bikes (Upsert pattern)
         for bike_data in bikes_data:
+            plate = bike_data.get("plate_number")
+            name = bike_data.get("bike_name")
+
             existing_bike = None
-            if bike_data.get("plate_number"):
-                existing_bike = db.query(Bike).filter(Bike.plate_number == bike_data["plate_number"]).first()
-            
-            if not existing_bike:
-                existing_bike = db.query(Bike).filter(Bike.bike_name == bike_data["bike_name"]).first()
+            if plate:
+                existing_bike = db.query(Bike).filter(Bike.plate_number == plate).first()
+            if not existing_bike and name:
+                existing_bike = db.query(Bike).filter(Bike.bike_name == name).first()
                 
-            if not existing_bike:
+            if existing_bike:
+                # Upsert / refresh attributes
+                for key, val in bike_data.items():
+                    if hasattr(existing_bike, key) and val is not None:
+                        setattr(existing_bike, key, val)
+                print(f"Refreshed existing bike: {name} [{plate}]")
+            else:
                 new_bike = Bike(**bike_data)
                 db.add(new_bike)
-                print(f"Added bike: {bike_data['bike_name']}")
-            else:
-                print(f"Bike {bike_data['bike_name']} already exists.")
+                print(f"Added bike: {name} [{plate}]")
+
     except Exception as e:
         print(f"Error seeding bikes: {e}")
 

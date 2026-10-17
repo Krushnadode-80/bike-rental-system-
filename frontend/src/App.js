@@ -13,6 +13,8 @@ import AboutPage from "./pages/AboutPage";
 import ContactPage from "./pages/ContactPage";
 import MyBookingsPage from "./pages/MyBookingsPage";
 import DashboardPage from "./pages/DashboardPage";
+import BikeDetailsPage from "./pages/BikeDetailsPage";
+import LikedBikesPage from "./pages/LikedBikesPage";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import ScrollToTop from "./components/ScrollToTop";
@@ -53,6 +55,8 @@ function App() {
           <Navbar />
           <Routes>
             <Route path="/" element={<HomePage />} />
+            <Route path="/bikes/:id" element={<BikeDetailsPage />} />
+            <Route path="/bike/:id" element={<BikeDetailsPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/admin" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
@@ -61,6 +65,8 @@ function App() {
             <Route path="/about" element={<AboutPage />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/my-bookings" element={<ProtectedRoute><MyBookingsPage /></ProtectedRoute>} />
+            <Route path="/liked-bikes" element={<LikedBikesPage />} />
+            <Route path="/favorites" element={<LikedBikesPage />} />
             <Route path="/dashboard" element={<ProtectedRoute adminOnly={true}><DashboardPage /></ProtectedRoute>} />
           </Routes>
           <Footer />

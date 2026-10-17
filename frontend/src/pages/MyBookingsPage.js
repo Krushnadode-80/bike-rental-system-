@@ -3,6 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import client from '../api/client';
 import { Calendar, Trash2, CheckCircle2, XCircle, Clock, Download, MapPin, AlertCircle } from 'lucide-react';
 import '../Home.css';
+import './MyBookings.css';
 import toast from 'react-hot-toast';
 import BikeImage from '../components/BikeImage';
 
@@ -37,16 +38,21 @@ const MyBookingsPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
+  const [cancellingId, setCancellingId] = useState(null);
+
   const handleCancelBooking = async (id) => {
     const check = window.confirm("Are you sure you want to cancel this booking reservation?");
     if (!check) return;
 
+    setCancellingId(id);
     try {
       await client.delete(`/cancel-booking/${id}`);
       toast.success("Booking cancelled successfully. Refund processed.");
-      fetchBookings();
+      await fetchBookings();
     } catch (err) {
       toast.error("Failed to cancel booking: " + (err.response?.data?.detail || "System error."));
+    } finally {
+      setCancellingId(null);
     }
   };
 
@@ -106,142 +112,166 @@ const MyBookingsPage = () => {
   };
 
   const getStatusStyle = (status) => {
-    if (status === 'Booked') return { bg: '#dcfce3', color: '#10b981', icon: <CheckCircle2 size={16} /> };
-    if (status === 'Cancelled') return { bg: '#fee2e2', color: '#ef4444', icon: <XCircle size={16} /> };
-    return { bg: '#fef3c7', color: '#d97706', icon: <Clock size={16} /> };
+    if (status === 'Booked') return { bg: '#dcfce3', color: '#10b981', icon: <CheckCircle2 size={15} /> };
+    if (status === 'Cancelled') return { bg: '#fee2e2', color: '#ef4444', icon: <XCircle size={15} /> };
+    return { bg: '#fef3c7', color: '#d97706', icon: <Clock size={15} /> };
   };
 
   return (
-    <div style={{ backgroundColor: '#f1f5f9', minHeight: '100vh', paddingBottom: '80px', color: '#1e293b' }}>
+    <div className="my-bookings-page">
 
-      {/* Dark Premium Hero Header */}
-      <div style={{
-        background: 'linear-gradient(rgba(15, 23, 42, 0.75), rgba(15, 23, 42, 0.95)), url("https://images.unsplash.com/photo-1449426468159-d96dbf08f19f?q=80&w=1920") no-repeat center center/cover',
-        padding: '100px 20px 120px 20px',
-        textAlign: 'center',
-        color: '#fff',
-        boxShadow: '0 10px 30px rgba(0,0,0,0.1)'
-      }}>
-        <h1 style={{ fontSize: '42px', fontWeight: 900, marginBottom: '16px', letterSpacing: '1px' }}>My Garage</h1>
-        <p style={{ fontSize: '18px', color: '#94a3b8', maxWidth: '600px', margin: '0 auto' }}>
+      {/* Dark Premium Compact Hero Header */}
+      <div className="my-bookings-hero">
+        <h1 className="my-bookings-hero-title">My Garage</h1>
+        <p className="my-bookings-hero-sub">
           Access your digital boarding passes, track active rides, and manage your reservation history.
         </p>
       </div>
 
-      <div style={{ maxWidth: '1000px', margin: '-40px auto 0 auto', padding: '0 20px', position: 'relative', zIndex: 10 }}>
+      <div className="my-bookings-container">
 
         {loading ? (
-          <div style={{ textAlign: 'center', padding: '60px', backgroundColor: '#fff', borderRadius: '16px', boxShadow: '0 10px 30px rgba(0,0,0,0.05)' }}>
-            <div style={{ width: '40px', height: '40px', border: '4px solid #ff5e14', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 1s linear infinite', margin: '0 auto 16px auto' }}></div>
-            <p style={{ color: '#64748b', fontWeight: 600 }}>Syncing your rides...</p>
+          <div style={{ textAlign: 'center', padding: '50px 20px', backgroundColor: 'var(--bg-card)', borderRadius: '16px', border: '1px solid var(--border-color)', boxShadow: '0 8px 24px rgba(0,0,0,0.05)' }}>
+            <div style={{ width: '36px', height: '36px', border: '3px solid #ff5e14', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 1s linear infinite', margin: '0 auto 14px auto' }}></div>
+            <p style={{ color: 'var(--text-muted)', fontWeight: 600, fontSize: '14px' }}>Syncing your rides...</p>
           </div>
         ) : error ? (
-          <div style={{ backgroundColor: '#fee2e2', color: '#ef4444', padding: '20px', borderRadius: '12px', textAlign: 'center', boxShadow: '0 10px 30px rgba(0,0,0,0.05)' }}>
-            <AlertCircle size={32} style={{ margin: '0 auto 12px auto' }} />
-            <p style={{ fontWeight: 600 }}>{error}</p>
+          <div style={{ backgroundColor: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', padding: '16px 20px', borderRadius: '12px', textAlign: 'center', border: '1px solid rgba(239, 68, 68, 0.2)' }}>
+            <AlertCircle size={28} style={{ margin: '0 auto 10px auto' }} />
+            <p style={{ fontWeight: 600, fontSize: '14px', margin: 0 }}>{error}</p>
           </div>
         ) : bookings.length === 0 ? (
-          <div style={{ backgroundColor: '#fff', padding: '80px 40px', borderRadius: '24px', textAlign: 'center', boxShadow: '0 20px 40px rgba(0,0,0,0.08)' }}>
-            <div style={{ width: '100px', height: '100px', backgroundColor: '#fff7ed', borderRadius: '50%', display: 'flex', justifyContent: 'center', alignItems: 'center', margin: '0 auto 24px auto' }}>
-              <Calendar size={48} color="#ff5e14" />
+          <div style={{ backgroundColor: 'var(--bg-card)', padding: '50px 24px', borderRadius: '16px', textAlign: 'center', border: '1px solid var(--border-color)', boxShadow: '0 8px 24px rgba(0,0,0,0.05)' }}>
+            <div style={{ width: '72px', height: '72px', backgroundColor: 'rgba(255, 94, 20, 0.1)', borderRadius: '50%', display: 'flex', justifyContent: 'center', alignItems: 'center', margin: '0 auto 18px auto' }}>
+              <Calendar size={36} color="#ff5e14" />
             </div>
-            <h3 style={{ fontSize: '28px', fontWeight: 900, marginBottom: '16px', color: '#0f172a' }}>No Rides Scheduled</h3>
-            <p style={{ color: '#64748b', marginBottom: '32px', fontSize: '16px', maxWidth: '400px', margin: '0 auto 32px auto' }}>
+            <h3 style={{ fontSize: '22px', fontWeight: 800, marginBottom: '10px', color: 'var(--text-main)' }}>No Rides Scheduled</h3>
+            <p style={{ color: 'var(--text-muted)', marginBottom: '24px', fontSize: '14px', maxWidth: '380px', margin: '0 auto 24px auto', lineHeight: 1.5 }}>
               Your garage is currently empty. Book a premium motorcycle and start your next adventure today!
             </p>
-            <Link to="/" style={{ backgroundColor: '#ff5e14', color: '#fff', padding: '16px 32px', borderRadius: '12px', textDecoration: 'none', fontWeight: 800, display: 'inline-block', boxShadow: '0 10px 20px rgba(255, 94, 20, 0.3)' }}>
+            <Link to="/" style={{ backgroundColor: '#ff5e14', color: '#fff', padding: '12px 24px', borderRadius: '10px', textDecoration: 'none', fontWeight: 700, fontSize: '14px', display: 'inline-block', boxShadow: '0 6px 16px rgba(255, 94, 20, 0.3)' }}>
               Explore Fleet
             </Link>
           </div>
         ) : (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '30px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             {bookings.map(booking => {
               const statusStyle = getStatusStyle(booking.status);
               const isActive = booking.status === 'Booked';
               const qrData = encodeURIComponent(`Bike: ${booking.bike_name} | ID: BR-${booking.id}9X | Dates: ${booking.booking_date} to ${booking.return_date || booking.booking_date} | Amount: Rs.${booking.total_price} | Status: ${booking.status}`);
 
               return (
-                /* VIP Digital Ticket Card */
-                <div key={booking.id} style={{ display: 'flex', flexWrap: 'wrap', backgroundColor: '#fff', borderRadius: '20px', boxShadow: '0 20px 40px rgba(0,0,0,0.06)', overflow: 'hidden', position: 'relative' }}>
+                /* Compact VIP Digital Ticket Card */
+                <div key={booking.id} className="booking-ticket-card">
 
                   {/* Left Side: Image & Brand */}
-                  <div style={{ flex: '1 1 300px', position: 'relative', minHeight: '280px', overflow: 'hidden', background: 'linear-gradient(135deg, #0f172a, #334155)' }}>
-                    <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(15,23,42,0.15) 0%, rgba(15,23,42,0.05) 35%, rgba(15,23,42,0.82) 100%)', zIndex: 1 }}></div>
+                  <div className="booking-ticket-img-wrap">
+                    <div className="booking-ticket-overlay"></div>
                     <BikeImage
                       src={booking.image_url}
                       alt={booking.bike_name}
                       style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
                     />
-                    <div style={{ position: 'absolute', inset: 0, boxSizing: 'border-box', zIndex: 2, padding: '24px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-                      <span style={{ backgroundColor: 'rgba(255,255,255,0.2)', backdropFilter: 'blur(10px)', color: '#fff', padding: '6px 12px', borderRadius: '20px', fontSize: '12px', fontWeight: 800, textTransform: 'uppercase', alignSelf: 'flex-start', border: '1px solid rgba(255,255,255,0.3)' }}>
-                        {booking.status === 'Booked' ? 'Active Pass' : 'Expired Pass'}
+                    <div className="booking-ticket-content-over">
+                      <span className="booking-pass-pill">
+                        {isActive ? 'Active Pass' : 'Expired Pass'}
                       </span>
                       <div>
-                        <h2 style={{ color: '#fff', fontSize: 'clamp(22px, 2vw, 28px)', lineHeight: 1.15, fontWeight: 900, margin: 0, overflowWrap: 'anywhere', textShadow: '0 2px 10px rgba(0,0,0,0.5)' }}>{booking.bike_name}</h2>
-                        <p style={{ color: '#f1f5f9', fontWeight: 600, fontSize: '14px', margin: '8px 0 0', textShadow: '0 1px 5px rgba(0,0,0,0.5)' }}>VIP Rental Class</p>
+                        <h2 className="booking-ticket-title">{booking.bike_name}</h2>
+                        <p className="booking-ticket-class">VIP Rental Class</p>
                       </div>
                     </div>
                   </div>
 
                   {/* Middle: Ticket Details */}
-                  <div style={{ flex: '2 1 350px', padding: '30px 40px', display: 'flex', flexDirection: 'column', justifyContent: 'center', borderRight: '2px dashed #e2e8f0', position: 'relative' }}>
-                    {/* Cutout circles for ticket effect */}
-                    <div style={{ position: 'absolute', top: '-15px', right: '-15px', width: '30px', height: '30px', backgroundColor: '#f1f5f9', borderRadius: '50%' }}></div>
-                    <div style={{ position: 'absolute', bottom: '-15px', right: '-15px', width: '30px', height: '30px', backgroundColor: '#f1f5f9', borderRadius: '50%' }}></div>
+                  <div className="booking-ticket-details">
+                    {/* Cutout notches for ticket effect */}
+                    <div className="booking-cutout-top"></div>
+                    <div className="booking-cutout-bottom"></div>
 
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-                      <div style={{ flex: 1 }}>
-                        <p style={{ fontSize: '11px', color: '#64748b', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '6px' }}>Pickup Date</p>
-                        <p style={{ fontSize: '15px', fontWeight: 800, color: '#0f172a', margin: 0 }}>{booking.booking_date}</p>
+                    <div className="booking-dates-row">
+                      <div className="booking-date-block">
+                        <p className="booking-date-label">Pickup Date</p>
+                        <p className="booking-date-val">{booking.booking_date}</p>
                       </div>
-                      <div style={{ flex: 1, textAlign: 'right' }}>
-                        <p style={{ fontSize: '11px', color: '#64748b', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '6px' }}>Return Date</p>
-                        <p style={{ fontSize: '15px', fontWeight: 800, color: '#0f172a', margin: 0 }}>{booking.return_date}</p>
+                      <div className="booking-date-block right">
+                        <p className="booking-date-label">Return Date</p>
+                        <p className="booking-date-val">{booking.return_date || booking.booking_date}</p>
                       </div>
                     </div>
 
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '14px 16px', backgroundColor: '#f8fafc', borderRadius: '12px', marginBottom: '24px', border: '1px solid #f1f5f9' }}>
-                      <MapPin size={18} color="#ff5e14" />
-                      <span style={{ fontSize: '14px', fontWeight: 700, color: '#334155' }}>Headquarters, Motor City Garage</span>
+                    <div className="booking-location-row">
+                      <MapPin size={16} color="#ff5e14" style={{ flexShrink: 0 }} />
+                      <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>Headquarters, Motor City Garage</span>
                     </div>
 
-                    <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginTop: 'auto' }}>
+                    <div className="booking-footer-row">
                       <div>
-                        <p style={{ fontSize: '11px', color: '#64748b', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '6px' }}>Total Amount</p>
-                        <p style={{ fontSize: '22px', fontWeight: 900, color: '#ff5e14', margin: 0 }}>₹{booking.total_price}</p>
+                        <p className="booking-date-label">Total Amount</p>
+                        <p className="booking-amount-val">₹{booking.total_price}</p>
                       </div>
-                      <span style={{ padding: '8px 14px', backgroundColor: statusStyle.bg, color: statusStyle.color, borderRadius: '20px', fontSize: '12px', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <span style={{ padding: '5px 12px', backgroundColor: statusStyle.bg, color: statusStyle.color, borderRadius: '20px', fontSize: '11.5px', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '5px' }}>
                         {statusStyle.icon} {booking.status}
                       </span>
                     </div>
                   </div>
 
                   {/* Right Side: Ticket Stub / Actions */}
-                  <div style={{ flex: '1 1 200px', padding: '30px 24px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', backgroundColor: '#fdfdfd' }}>
-                    <div style={{ padding: '8px', backgroundColor: '#fff', border: '1px solid #e2e8f0', borderRadius: '12px', marginBottom: '20px', boxShadow: '0 4px 6px rgba(0,0,0,0.05)' }}>
-                      <img
-                        src={`https://api.qrserver.com/v1/create-qr-code/?size=400x400&margin=10&data=${qrData}`}
-                        alt="Scan for Details"
-                        style={{ width: '70px', height: '70px', display: 'block' }}
-                      />
+                  <div className="booking-ticket-stub">
+                    <div className="booking-ticket-stub-left">
+                      <div className="booking-qr-box">
+                        <img
+                          src={`https://api.qrserver.com/v1/create-qr-code/?size=400x400&margin=10&data=${qrData}`}
+                          alt="Scan for Details"
+                          className="booking-qr-img"
+                          style={{ width: '56px', height: '56px', display: 'block' }}
+                        />
+                      </div>
+                      <p className="booking-id-tag">ID: BR-{booking.id}9X</p>
                     </div>
-                    <p style={{ fontSize: '11px', color: '#94a3b8', fontWeight: 700, letterSpacing: '2px', marginBottom: '24px' }}>ID: BR-{booking.id}9X</p>
 
-                    <button
-                      onClick={() => setSelectedInvoice(booking)}
-                      style={{ width: '100%', padding: '10px 0', backgroundColor: '#0f172a', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '13px', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', marginBottom: isActive ? '10px' : '0', transition: 'background-color 0.2s' }}
-                    >
-                      <Download size={14} /> Receipt
-                    </button>
-
-                    {isActive && (
+                    <div className="booking-stub-actions">
                       <button
-                        onClick={() => handleCancelBooking(booking.id)}
-                        style={{ width: '100%', padding: '10px 0', backgroundColor: '#fff1f2', color: '#e11d48', border: '1px solid #ffe4e6', borderRadius: '8px', fontSize: '13px', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', transition: 'background-color 0.2s' }}
+                        onClick={() => setSelectedInvoice(booking)}
+                        className="booking-btn-receipt"
                       >
-                        <Trash2 size={14} /> Cancel
+                        <Download size={13} /> Receipt
                       </button>
-                    )}
+
+                      {isActive && (
+                        <button
+                          onClick={() => handleCancelBooking(booking.id)}
+                          className="booking-btn-cancel"
+                          disabled={cancellingId === booking.id}
+                          style={{
+                            opacity: cancellingId === booking.id ? 0.7 : 1,
+                            cursor: cancellingId === booking.id ? 'wait' : 'pointer'
+                          }}
+                        >
+                          {cancellingId === booking.id ? (
+                            <>
+                              <span 
+                                className="spinner" 
+                                style={{ 
+                                  width: '12px', 
+                                  height: '12px', 
+                                  border: '2px solid #ffffff', 
+                                  borderTopColor: 'transparent', 
+                                  borderRadius: '50%', 
+                                  display: 'inline-block',
+                                  animation: 'spin 1s linear infinite' 
+                                }} 
+                              />
+                              <span>Cancelling...</span>
+                            </>
+                          ) : (
+                            <>
+                              <Trash2 size={13} /> Cancel
+                            </>
+                          )}
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </div>
               );

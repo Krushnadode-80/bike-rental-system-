@@ -16,19 +16,19 @@ const AboutPage = () => {
   }, [location]);
 
   return (
-    <div style={{ backgroundColor: '#ffffff', minHeight: '100vh', color: '#1e293b' }}>
+    <div style={{ backgroundColor: 'var(--bg-main)', minHeight: '100vh', color: 'var(--text-main)', transition: 'background-color 0.3s ease' }}>
 
       {/* Full Width Hero Section */}
 
       <div style={{
         textAlign: 'center',
-        padding: '160px 20px',
-        background: 'linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url("https://images.unsplash.com/photo-1558980663-3685c1d673c4?q=80&w=1920") no-repeat center center/cover',
+        padding: '140px 20px',
+        background: 'linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("https://images.unsplash.com/photo-1558980663-3685c1d673c4?q=80&w=1920") no-repeat center center/cover',
         color: '#ffffff',
-        marginBottom: '80px'
+        marginBottom: '60px'
       }}>
-        <h1 style={{ fontSize: '56px', fontWeight: 900, color: '#ffffff', marginBottom: '20px', textShadow: '0 2px 10px rgba(0,0,0,0.3)' }}>Our Journey</h1>
-        <p style={{ fontSize: '20px', color: '#f1f5f9', maxWidth: '650px', margin: '0 auto', lineHeight: '1.6', textShadow: '0 1px 5px rgba(0,0,0,0.3)' }}>
+        <h1 style={{ fontSize: ' clamp(36px, 6vw, 56px)', fontWeight: 900, color: '#ffffff', marginBottom: '20px', textShadow: '0 2px 10px rgba(0,0,0,0.3)' }}>Our Journey</h1>
+        <p style={{ fontSize: '18px', color: '#f1f5f9', maxWidth: '650px', margin: '0 auto', lineHeight: '1.6', textShadow: '0 1px 5px rgba(0,0,0,0.3)' }}>
           We started with a simple idea: making high-quality, perfectly maintained bikes accessible to everyone who wants to experience the thrill of the open road and nature.
         </p>
       </div>
@@ -36,81 +36,81 @@ const AboutPage = () => {
       <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 20px' }}>
 
         {/* Content Section */}
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '40px', alignItems: 'center', marginBottom: '100px' }}>
-          <div style={{ flex: '1 1 500px' }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '40px', alignItems: 'center', marginBottom: '80px' }}>
+          <div style={{ flex: '1 1 450px' }}>
             <img
               src="https://images.unsplash.com/photo-1558981806-ec527fa84c39?q=80&w=1200"
               alt="Premium Bike"
               style={{ width: '100%', borderRadius: '20px', boxShadow: '0 20px 40px rgba(0,0,0,0.1)' }}
             />
           </div>
-          <div style={{ flex: '1 1 500px' }}>
-            <h2 style={{ fontSize: '32px', fontWeight: 800, marginBottom: '20px' }}>Driven By Passion</h2>
-            <p style={{ fontSize: '16px', color: '#475569', lineHeight: '1.8', marginBottom: '24px' }}>
+          <div style={{ flex: '1 1 450px' }}>
+            <h2 style={{ fontSize: '30px', fontWeight: 800, color: 'var(--text-main)', marginBottom: '18px' }}>Driven By Passion</h2>
+            <p style={{ fontSize: '15px', color: 'var(--text-muted)', lineHeight: '1.8', marginBottom: '20px' }}>
               Since our founding in 2020, Bike Rental has grown from a local startup into the city's premier destination for two-wheeled adventures. We carefully curate our fleet, ensuring every single motorcycle and scooter meets our rigorous standards for performance, safety, and style.
             </p>
-            <p style={{ fontSize: '16px', color: '#475569', lineHeight: '1.8' }}>
+            <p style={{ fontSize: '15px', color: 'var(--text-muted)', lineHeight: '1.8' }}>
               Whether you're exploring the coastal highways, navigating the bustling city streets, or just escaping for the weekend, we provide the perfect companion for your journey.
             </p>
           </div>
         </div>
 
         {/* Features Section */}
-        <h2 style={{ textAlign: 'center', fontSize: '32px', fontWeight: 800, marginBottom: '40px' }}>Why Choose Us</h2>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '30px' }}>
+        <h2 style={{ textAlign: 'center', fontSize: '32px', fontWeight: 800, color: 'var(--text-main)', marginBottom: '40px' }}>Why Choose Us</h2>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '24px' }}>
 
-          <div style={{ padding: '30px', backgroundColor: '#f8fafc', borderRadius: '16px', textAlign: 'center', border: '1px solid #f1f5f9' }}>
-            <div style={{ width: '60px', height: '60px', backgroundColor: '#fff', borderRadius: '50%', display: 'flex', justifyContent: 'center', alignItems: 'center', margin: '0 auto 20px auto', boxShadow: '0 4px 10px rgba(0,0,0,0.05)' }}>
+          <div style={{ padding: '30px', backgroundColor: 'var(--bg-card)', borderRadius: '16px', textAlign: 'center', border: '1px solid var(--border-color)', boxShadow: '0 4px 16px rgba(0,0,0,0.03)' }}>
+            <div style={{ width: '60px', height: '60px', backgroundColor: 'var(--bg-main)', borderRadius: '50%', display: 'flex', justifyContent: 'center', alignItems: 'center', margin: '0 auto 20px auto', boxShadow: '0 4px 10px rgba(0,0,0,0.05)', border: '1px solid var(--border-color)' }}>
               <Bike size={28} color="#ff5e14" />
             </div>
-            <h3 style={{ fontSize: '18px', fontWeight: 700, marginBottom: '12px' }}>Premium Fleet</h3>
-            <p style={{ fontSize: '14px', color: '#64748b', lineHeight: '1.6' }}>We offer only the best brands. Fully serviced and ready to ride.</p>
+            <h3 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--text-main)', marginBottom: '12px' }}>Premium Fleet</h3>
+            <p style={{ fontSize: '14px', color: 'var(--text-muted)', lineHeight: '1.6' }}>We offer only the best brands. Fully serviced and ready to ride.</p>
           </div>
 
-          <div style={{ padding: '30px', backgroundColor: '#f8fafc', borderRadius: '16px', textAlign: 'center', border: '1px solid #f1f5f9' }}>
-            <div style={{ width: '60px', height: '60px', backgroundColor: '#fff', borderRadius: '50%', display: 'flex', justifyContent: 'center', alignItems: 'center', margin: '0 auto 20px auto', boxShadow: '0 4px 10px rgba(0,0,0,0.05)' }}>
+          <div style={{ padding: '30px', backgroundColor: 'var(--bg-card)', borderRadius: '16px', textAlign: 'center', border: '1px solid var(--border-color)', boxShadow: '0 4px 16px rgba(0,0,0,0.03)' }}>
+            <div style={{ width: '60px', height: '60px', backgroundColor: 'var(--bg-main)', borderRadius: '50%', display: 'flex', justifyContent: 'center', alignItems: 'center', margin: '0 auto 20px auto', boxShadow: '0 4px 10px rgba(0,0,0,0.05)', border: '1px solid var(--border-color)' }}>
               <Shield size={28} color="#ff5e14" />
             </div>
-            <h3 style={{ fontSize: '18px', fontWeight: 700, marginBottom: '12px' }}>Fully Insured</h3>
-            <p style={{ fontSize: '14px', color: '#64748b', lineHeight: '1.6' }}>Comprehensive insurance coverage included with every rental for your peace of mind.</p>
+            <h3 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--text-main)', marginBottom: '12px' }}>Fully Insured</h3>
+            <p style={{ fontSize: '14px', color: 'var(--text-muted)', lineHeight: '1.6' }}>Comprehensive insurance coverage included with every rental for your peace of mind.</p>
           </div>
 
-          <div style={{ padding: '30px', backgroundColor: '#f8fafc', borderRadius: '16px', textAlign: 'center', border: '1px solid #f1f5f9' }}>
-            <div style={{ width: '60px', height: '60px', backgroundColor: '#fff', borderRadius: '50%', display: 'flex', justifyContent: 'center', alignItems: 'center', margin: '0 auto 20px auto', boxShadow: '0 4px 10px rgba(0,0,0,0.05)' }}>
+          <div style={{ padding: '30px', backgroundColor: 'var(--bg-card)', borderRadius: '16px', textAlign: 'center', border: '1px solid var(--border-color)', boxShadow: '0 4px 16px rgba(0,0,0,0.03)' }}>
+            <div style={{ width: '60px', height: '60px', backgroundColor: 'var(--bg-main)', borderRadius: '50%', display: 'flex', justifyContent: 'center', alignItems: 'center', margin: '0 auto 20px auto', boxShadow: '0 4px 10px rgba(0,0,0,0.05)', border: '1px solid var(--border-color)' }}>
               <Clock size={28} color="#ff5e14" />
             </div>
-            <h3 style={{ fontSize: '18px', fontWeight: 700, marginBottom: '12px' }}>24/7 Support</h3>
-            <p style={{ fontSize: '14px', color: '#64748b', lineHeight: '1.6' }}>Our roadside assistance and customer support team is always just a call away.</p>
+            <h3 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--text-main)', marginBottom: '12px' }}>24/7 Support</h3>
+            <p style={{ fontSize: '14px', color: 'var(--text-muted)', lineHeight: '1.6' }}>Our roadside assistance and customer support team is always just a call away.</p>
           </div>
 
-          <div style={{ padding: '30px', backgroundColor: '#f8fafc', borderRadius: '16px', textAlign: 'center', border: '1px solid #f1f5f9' }}>
-            <div style={{ width: '60px', height: '60px', backgroundColor: '#fff', borderRadius: '50%', display: 'flex', justifyContent: 'center', alignItems: 'center', margin: '0 auto 20px auto', boxShadow: '0 4px 10px rgba(0,0,0,0.05)' }}>
+          <div style={{ padding: '30px', backgroundColor: 'var(--bg-card)', borderRadius: '16px', textAlign: 'center', border: '1px solid var(--border-color)', boxShadow: '0 4px 16px rgba(0,0,0,0.03)' }}>
+            <div style={{ width: '60px', height: '60px', backgroundColor: 'var(--bg-main)', borderRadius: '50%', display: 'flex', justifyContent: 'center', alignItems: 'center', margin: '0 auto 20px auto', boxShadow: '0 4px 10px rgba(0,0,0,0.05)', border: '1px solid var(--border-color)' }}>
               <Award size={28} color="#ff5e14" />
             </div>
-            <h3 style={{ fontSize: '18px', fontWeight: 700, marginBottom: '12px' }}>Best Prices</h3>
-            <p style={{ fontSize: '14px', color: '#64748b', lineHeight: '1.6' }}>Transparent, competitive pricing with absolutely zero hidden fees.</p>
+            <h3 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--text-main)', marginBottom: '12px' }}>Best Prices</h3>
+            <p style={{ fontSize: '14px', color: 'var(--text-muted)', lineHeight: '1.6' }}>Transparent, competitive pricing with absolutely zero hidden fees.</p>
           </div>
 
         </div>
 
         {/* How It Works Section */}
-        <div id="how-it-works" style={{ marginTop: '100px', marginBottom: '100px' }}>
-          <h2 style={{ textAlign: 'center', fontSize: '32px', fontWeight: 800, marginBottom: '40px' }}>How It Works</h2>
+        <div id="how-it-works" style={{ marginTop: '90px', marginBottom: '80px' }}>
+          <h2 style={{ textAlign: 'center', fontSize: '32px', fontWeight: 800, color: 'var(--text-main)', marginBottom: '40px' }}>How It Works</h2>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '30px', position: 'relative' }}>
-            <div style={{ padding: '30px', textAlign: 'center' }}>
-              <div style={{ width: '80px', height: '80px', backgroundColor: '#ff5e14', color: 'white', borderRadius: '50%', display: 'flex', justifyContent: 'center', alignItems: 'center', margin: '0 auto 20px auto', fontSize: '24px', fontWeight: 'bold', boxShadow: '0 10px 20px rgba(255, 94, 20, 0.3)' }}>1</div>
-              <h3 style={{ fontSize: '20px', fontWeight: 700, marginBottom: '12px' }}>Choose Your Ride</h3>
-              <p style={{ color: '#64748b', lineHeight: '1.6' }}>Browse our premium collection and pick the perfect bike for your journey.</p>
+            <div style={{ padding: '30px', textAlign: 'center', backgroundColor: 'var(--bg-card)', borderRadius: '16px', border: '1px solid var(--border-color)' }}>
+              <div style={{ width: '70px', height: '70px', backgroundColor: '#ff5e14', color: 'white', borderRadius: '50%', display: 'flex', justifyContent: 'center', alignItems: 'center', margin: '0 auto 20px auto', fontSize: '22px', fontWeight: 'bold', boxShadow: '0 10px 20px rgba(255, 94, 20, 0.3)' }}>1</div>
+              <h3 style={{ fontSize: '19px', fontWeight: 700, color: 'var(--text-main)', marginBottom: '10px' }}>Choose Your Ride</h3>
+              <p style={{ color: 'var(--text-muted)', lineHeight: '1.6', fontSize: '14px' }}>Browse our premium collection and pick the perfect bike for your journey.</p>
             </div>
-            <div style={{ padding: '30px', textAlign: 'center' }}>
-              <div style={{ width: '80px', height: '80px', backgroundColor: '#ff5e14', color: 'white', borderRadius: '50%', display: 'flex', justifyContent: 'center', alignItems: 'center', margin: '0 auto 20px auto', fontSize: '24px', fontWeight: 'bold', boxShadow: '0 10px 20px rgba(255, 94, 20, 0.3)' }}>2</div>
-              <h3 style={{ fontSize: '20px', fontWeight: 700, marginBottom: '12px' }}>Book & Verify</h3>
-              <p style={{ color: '#64748b', lineHeight: '1.6' }}>Complete a quick KYC and secure your booking with our safe digital payment.</p>
+            <div style={{ padding: '30px', textAlign: 'center', backgroundColor: 'var(--bg-card)', borderRadius: '16px', border: '1px solid var(--border-color)' }}>
+              <div style={{ width: '70px', height: '70px', backgroundColor: '#ff5e14', color: 'white', borderRadius: '50%', display: 'flex', justifyContent: 'center', alignItems: 'center', margin: '0 auto 20px auto', fontSize: '22px', fontWeight: 'bold', boxShadow: '0 10px 20px rgba(255, 94, 20, 0.3)' }}>2</div>
+              <h3 style={{ fontSize: '19px', fontWeight: 700, color: 'var(--text-main)', marginBottom: '10px' }}>Book & Verify</h3>
+              <p style={{ color: 'var(--text-muted)', lineHeight: '1.6', fontSize: '14px' }}>Complete a quick KYC and secure your booking with our safe digital payment.</p>
             </div>
-            <div style={{ padding: '30px', textAlign: 'center' }}>
-              <div style={{ width: '80px', height: '80px', backgroundColor: '#ff5e14', color: 'white', borderRadius: '50%', display: 'flex', justifyContent: 'center', alignItems: 'center', margin: '0 auto 20px auto', fontSize: '24px', fontWeight: 'bold', boxShadow: '0 10px 20px rgba(255, 94, 20, 0.3)' }}>3</div>
-              <h3 style={{ fontSize: '20px', fontWeight: 700, marginBottom: '12px' }}>Hit The Road</h3>
-              <p style={{ color: '#64748b', lineHeight: '1.6' }}>Pick up your bike at the scheduled time and enjoy your adventure.</p>
+            <div style={{ padding: '30px', textAlign: 'center', backgroundColor: 'var(--bg-card)', borderRadius: '16px', border: '1px solid var(--border-color)' }}>
+              <div style={{ width: '70px', height: '70px', backgroundColor: '#ff5e14', color: 'white', borderRadius: '50%', display: 'flex', justifyContent: 'center', alignItems: 'center', margin: '0 auto 20px auto', fontSize: '22px', fontWeight: 'bold', boxShadow: '0 10px 20px rgba(255, 94, 20, 0.3)' }}>3</div>
+              <h3 style={{ fontSize: '19px', fontWeight: 700, color: 'var(--text-main)', marginBottom: '10px' }}>Hit The Road</h3>
+              <p style={{ color: 'var(--text-muted)', lineHeight: '1.6', fontSize: '14px' }}>Pick up your bike at the scheduled time and enjoy your adventure.</p>
             </div>
           </div>
         </div>

@@ -42,6 +42,16 @@ def get_bikes(
     bikes = db.query(Bike).all()
     return bikes
 
+@router.get("/bikes/{bike_id}")
+def get_bike(
+    bike_id: int,
+    db: Session = Depends(get_db)
+):
+    bike = db.query(Bike).filter(Bike.id == bike_id).first()
+    if not bike:
+        raise HTTPException(status_code=404, detail="Bike not found")
+    return bike
+
 @router.put("/update-bike/{bike_id}")
 def update_bike(
     bike_id: int,

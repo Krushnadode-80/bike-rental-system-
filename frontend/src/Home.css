@@ -100,26 +100,158 @@
 
 .filter-input-wrap {
   background: var(--bg-main);
-  border-radius: 8px;
+  border-radius: 10px;
   height: 48px;
   display: flex;
   align-items: center;
-  padding: 0 16px;
+  padding: 0;
   border: 1px solid var(--border-color);
+  position: relative;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  box-sizing: border-box;
 }
 
-.filter-input-wrap input, .filter-input-wrap select {
+.filter-input-wrap:focus-within {
+  border-color: var(--brand-orange);
+  box-shadow: 0 0 0 3px rgba(255, 94, 20, 0.12);
+}
+
+.filter-input-wrap input {
   border: none;
   background: transparent;
   width: 100%;
   height: 100%;
+  padding: 0 16px;
   outline: none;
   font-size: 14px;
+  font-family: inherit;
   color: var(--text-main);
+  box-sizing: border-box;
 }
 
 .filter-input-wrap input::placeholder {
   color: #94a3b8;
+}
+
+/* Custom Availability Dropdown Styling - Pixel Perfect Alignment */
+.filter-dropdown-wrap {
+  cursor: pointer;
+  user-select: none;
+}
+
+.filter-dropdown-trigger {
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  border: none;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 14px;
+  color: var(--text-main);
+  outline: none;
+  box-sizing: border-box;
+  text-align: left;
+}
+
+.filter-dropdown-value {
+  font-size: 14px;
+  color: var(--text-main);
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.filter-dropdown-chevron {
+  color: var(--text-muted);
+  transition: transform 0.2s ease, color 0.2s ease;
+  flex-shrink: 0;
+  margin-left: 8px;
+}
+
+.filter-dropdown-chevron.open {
+  transform: rotate(180deg);
+  color: var(--brand-orange);
+}
+
+.filter-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  width: 100%;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+  padding: 6px;
+  z-index: 100;
+  box-sizing: border-box;
+  animation: filterDropdownFade 0.18s ease-out;
+}
+
+@keyframes filterDropdownFade {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.filter-dropdown-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: var(--text-main);
+  font-size: 13.5px;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.15s ease;
+  box-sizing: border-box;
+}
+
+.filter-dropdown-item:hover {
+  background: rgba(255, 94, 20, 0.08);
+  color: var(--brand-orange);
+}
+
+.filter-dropdown-item.active {
+  background: rgba(255, 94, 20, 0.12);
+  color: var(--brand-orange);
+  font-weight: 700;
+}
+
+.filter-item-check {
+  color: var(--brand-orange);
+  flex-shrink: 0;
+}
+
+.filter-input-wrap select {
+  border: none;
+  background: transparent;
+  width: 100%;
+  height: 100%;
+  padding: 0 36px 0 16px;
+  outline: none;
+  font-size: 14px;
+  font-family: inherit;
+  color: var(--text-main);
+  cursor: pointer;
+  box-sizing: border-box;
 }
 
 .section-title {
@@ -134,151 +266,693 @@
   width: 100%;
   display: flex;
   justify-content: center;
-  padding: 0 40px 60px 40px;
+  padding: 0 clamp(16px, 4vw, 40px) 60px clamp(16px, 4vw, 40px);
   box-sizing: border-box;
 }
 
 .bikes-grid-wrapper {
   width: 100%;
-  max-width: 1200px;
+  max-width: 1320px;
 }
 
 .bikes-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 30px;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
 }
 
+/* Modern Bike Card - Compact & Refined Design */
 .bike-card {
   background: var(--bg-card);
-  border-radius: 20px;
+  border-radius: 18px;
   overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
   display: flex;
   flex-direction: column;
-  border: 1px solid var(--border-color);
+  border: 1px solid rgba(226, 232, 240, 0.85);
+  padding: 12px 12px 14px 12px;
+  box-sizing: border-box;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, border-color 0.25s ease;
+  position: relative;
 }
 
+[data-theme="black"] .bike-card {
+  background: #0f172a;
+  border-color: #1e293b;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
+}
+
+.bike-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+  border-color: rgba(255, 94, 20, 0.35);
+}
+
+/* Rounded Media Container with Full Cover Image */
 .bike-card-img-wrap {
   width: 100%;
-  height: 240px;
-  background: var(--bg-main);
+  height: 160px;
+  background-color: #0f172a;
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+[data-theme="black"] .bike-card-img-wrap {
+  background-color: #0b0f19;
+}
+
+/* Top-Left Available Now Badge */
+.bike-card-img-wrap .status-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 2;
+  padding: 4px 10px;
+  border-radius: 50px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.status-available {
+  background-color: #059669;
+  color: #ffffff;
+  border: none;
+}
+
+.status-booked {
+  background-color: #ef4444;
+  color: #ffffff;
+  border: none;
+}
+
+/* Top-Right Favorite Heart Circle Button */
+.btn-favorite-heart {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+  padding: 0;
+}
+
+[data-theme="black"] .btn-favorite-heart {
+  background-color: rgba(15, 23, 42, 0.9);
+  border-color: #334155;
+}
+
+.btn-favorite-heart:hover {
+  transform: scale(1.1);
+  border-color: #ef4444;
+}
+
+.btn-favorite-heart.active {
+  background-color: #fef2f2;
+  border-color: #fca5a5;
 }
 
 .bike-card-img {
   width: 100%;
   height: 100%;
+  max-width: 100%;
+  max-height: 100%;
   object-fit: cover;
+  display: block;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+.bike-card:hover .bike-card-img {
+  transform: scale(1.05);
+}
+
+/* Card Body Content */
 .bike-card-content {
-  padding: 24px;
+  padding: 10px 2px 2px 2px;
   display: flex;
   flex-direction: column;
   flex-grow: 1;
 }
 
-.bike-card-header {
+/* Category & Star Rating Row */
+.bike-card-meta-row {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 8px;
-}
-
-.bike-card-title {
-  font-size: 20px;
-  font-weight: 800;
-  color: var(--text-main);
-  margin: 0;
-}
-
-.status-badge {
-  padding: 4px 10px;
-  border-radius: 4px;
-  font-size: 10px;
-  font-weight: 800;
-  text-transform: uppercase;
-}
-
-.status-booked {
-  background-color: #fee2e2;
-  color: #ef4444;
-}
-
-.status-available {
-  background-color: #dcfce3;
-  color: #10b981;
-}
-
-.bike-card-specs {
-  font-size: 12px;
-  color: var(--text-muted);
-  margin-bottom: 16px;
-}
-
-.specs-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-bottom: 24px;
-}
-
-.spec-item {
-  background-color: var(--bg-main);
-  padding: 8px;
-  border-radius: 6px;
-  display: flex;
-  flex-direction: column;
-}
-
-.spec-label {
-  font-size: 10px;
-  font-weight: 800;
-  color: var(--text-muted);
+  align-items: center;
   margin-bottom: 4px;
 }
 
-.spec-value {
+.bike-category-tag {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  color: #57534e;
+  text-transform: uppercase;
+}
+
+[data-theme="black"] .bike-category-tag {
+  color: #94a3b8;
+}
+
+.bike-rating-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 11.5px;
+}
+
+.bike-rating-pill .rating-score {
+  font-weight: 800;
+  color: var(--text-main);
+}
+
+.bike-rating-pill .rating-count {
+  font-weight: 500;
+  color: var(--text-muted);
+  font-size: 10.5px;
+}
+
+/* Bike Name & Subtitle */
+.bike-card-title {
+  font-size: 16.5px;
+  font-weight: 800;
+  color: var(--text-main);
+  margin: 2px 0 2px 0;
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: -0.2px;
+}
+
+.bike-card-subtitle {
   font-size: 12px;
+  color: var(--text-muted);
+  margin: 0 0 10px 0;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 4-Column Quad Specs Grid in 1 Row (CC, EFF, TORQUE, STYLE) */
+.bike-specs-quad-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 5px;
+  margin-bottom: 12px;
+}
+
+.spec-tile {
+  background-color: #eff4fa;
+  border-radius: 6px;
+  padding: 6px 2px;
+  text-align: center;
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
+}
+
+[data-theme="black"] .spec-tile {
+  background-color: #1e293b;
+  border-color: #334155;
+}
+
+.bike-card:hover .spec-tile {
+  background-color: #e2eaf4;
+}
+
+[data-theme="black"] .bike-card:hover .spec-tile {
+  background-color: #334155;
+}
+
+.spec-tile-label {
+  display: block;
+  font-size: 9.5px;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  margin-bottom: 2px;
+  letter-spacing: 0.2px;
+}
+
+.spec-tile-value {
+  display: block;
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--text-main);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: -0.2px;
+}
+
+/* Price Row: Daily Rate on Left + Hourly Rate on Right */
+.bike-card-price-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-top: auto;
+  margin-bottom: 10px;
+}
+
+.bike-daily-price {
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+}
+
+.bike-daily-price .price-num {
+  font-size: 19px;
+  font-weight: 900;
+  color: var(--text-main);
+  line-height: 1;
+  letter-spacing: -0.3px;
+}
+
+.bike-daily-price .price-period {
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-left: 2px;
+}
+
+.bike-hourly-price {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+/* Actions Row: Details Button + Book Now Button */
+.bike-card-actions-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.btn-card-details {
+  background-color: #e8f0fe;
+  color: #1d4ed8;
+  border: none;
+  border-radius: 9px;
+  padding: 9px 12px;
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-card-details:hover {
+  background-color: #dbe7fb;
+  color: #1e40af;
+  transform: translateY(-1px);
+}
+
+[data-theme="black"] .btn-card-details {
+  background-color: rgba(59, 130, 246, 0.16);
+  color: #60a5fa;
+}
+
+[data-theme="black"] .btn-card-details:hover {
+  background-color: rgba(59, 130, 246, 0.28);
+  color: #93c5fd;
+}
+
+.btn-card-book {
+  background-color: #ff5722;
+  color: #ffffff;
+  border: none;
+  border-radius: 9px;
+  padding: 9px 12px;
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 3px 10px rgba(255, 87, 34, 0.22);
+}
+
+.btn-card-book:hover {
+  background-color: #e64a19;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(255, 87, 34, 0.3);
+}
+
+.btn-card-book:active {
+  transform: translateY(0);
+}
+
+.btn-card-book.booked {
+  background-color: var(--border-color);
+  color: var(--text-muted);
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+
+/* =========================================
+   DETAILS MODAL STYLES
+   ========================================= */
+.details-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(15, 23, 42, 0.8);
+  backdrop-filter: blur(8px);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.details-modal-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 18px;
+  max-width: 440px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.28);
+  padding: 14px 18px 16px 18px;
+  animation: fadeInDown 0.22s ease-out;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 163, 184, 0.3) transparent;
+}
+
+.details-modal-card::-webkit-scrollbar {
+  width: 5px;
+}
+
+.details-modal-card::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.3);
+  border-radius: 10px;
+}
+
+.details-modal-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(8px);
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 10;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
+[data-theme="black"] .details-modal-close {
+  background: rgba(15, 23, 42, 0.9);
+  border-color: #334155;
+}
+
+.details-modal-close:hover {
+  color: var(--brand-orange);
+  border-color: var(--brand-orange);
+  transform: scale(1.08);
+}
+
+.details-modal-img-wrap {
+  width: 100%;
+  height: 145px;
+  background-color: #0f172a;
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
+  padding: 0;
+  margin-bottom: 10px;
+}
+
+.details-modal-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.details-modal-header {
+  margin-bottom: 8px;
+}
+
+.details-modal-category {
+  font-size: 10px;
+  font-weight: 800;
+  color: var(--brand-orange);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.details-modal-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--text-main);
+  margin: 1px 0 2px 0;
+  line-height: 1.2;
+}
+
+.details-modal-subtitle {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin: 0;
+  line-height: 1.2;
+}
+
+.details-modal-section-title {
+  font-size: 10.5px;
+  font-weight: 800;
+  color: var(--text-main);
+  margin: 8px 0 4px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.details-modal-specs {
+  gap: 6px;
+  margin-bottom: 8px !important;
+}
+
+.details-modal-card .spec-tile {
+  padding: 5px 3px;
+  border-radius: 6px;
+}
+
+.details-modal-card .spec-tile-label {
+  font-size: 9px;
+  margin-bottom: 2px;
+}
+
+.details-modal-card .spec-tile-value {
+  font-size: 11.5px;
+  font-weight: 800;
+}
+
+.details-modal-perks {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5px;
+  margin-bottom: 10px;
+}
+
+.details-modal-perk-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background-color: var(--bg-main);
+  border: 1px solid var(--border-color);
+  padding: 5px 8px;
+  border-radius: 6px;
+  font-size: 11px;
   font-weight: 600;
   color: var(--text-main);
 }
 
-.bike-card-price {
-  font-size: 24px;
-  font-weight: 800;
-  color: #3b82f6;
-  margin-bottom: 24px;
+.details-modal-perk-item svg {
+  flex-shrink: 0;
 }
 
-.bike-card-price span {
-  font-size: 18px;
+.details-modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 10px;
+  border-top: 1px solid var(--border-color);
+  gap: 12px;
 }
 
-.btn-book {
-  width: 100%;
-  padding: 16px;
-  border-radius: 12px;
+.details-modal-pricing {
+  display: flex;
+  flex-direction: column;
+}
+
+.details-modal-rate-big {
+  font-size: 19px;
+  font-weight: 900;
+  color: var(--brand-orange);
+  line-height: 1;
+}
+
+.details-modal-rate-sub {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 3px;
+  font-weight: 500;
+}
+
+.btn-details-book {
+  background-color: var(--brand-orange);
+  color: #ffffff;
   border: none;
-  font-size: 15px;
+  padding: 9px 18px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 3px 10px rgba(255, 94, 20, 0.25);
+  white-space: nowrap;
+}
+
+.btn-details-book:hover {
+  background-color: #e04e0b;
+  transform: translateY(-1px);
+}
+
+/* Skeleton Loading State for Cards */
+.skeleton-card {
+  pointer-events: none;
+}
+
+.skeleton-shimmer {
+  background: linear-gradient(90deg, var(--bg-main) 25%, var(--border-color) 50%, var(--bg-main) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.skeleton-img {
+  width: 100%;
+  height: 160px;
+  border-radius: 12px;
+}
+
+.skeleton-line {
+  height: 14px;
+  border-radius: 4px;
+  margin-bottom: 12px;
+}
+
+.skeleton-title {
+  width: 70%;
+  height: 18px;
+}
+
+.skeleton-chips {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.skeleton-chip {
+  width: 60px;
+  height: 22px;
+  border-radius: 6px;
+}
+
+.skeleton-price {
+  width: 70px;
+  height: 20px;
+  margin-bottom: 0;
+}
+
+.skeleton-btn {
+  width: 90px;
+  height: 34px;
+  border-radius: 10px;
+}
+
+/* Empty Catalog State */
+.bikes-empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.bikes-empty-state .empty-icon {
+  color: var(--brand-orange);
+  margin-bottom: 16px;
+  opacity: 0.8;
+}
+
+.bikes-empty-state h3 {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--text-main);
+  margin: 0 0 8px 0;
+}
+
+.bikes-empty-state p {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin: 0 0 20px 0;
+  line-height: 1.5;
+}
+
+.btn-reset-filters {
+  background: var(--brand-orange);
+  color: #ffffff;
+  border: none;
+  padding: 10px 22px;
+  border-radius: 10px;
+  font-size: 14px;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
-.btn-book.available {
-  background-color: #10b981;
-  color: #ffffff;
-}
-
-.btn-book.available:hover {
-  background-color: #059669;
-}
-
-.btn-book.booked {
-  background-color: #ef4444;
-  color: #ffffff;
-  cursor: not-allowed;
+.btn-reset-filters:hover {
+  background: #e04e0b;
+  transform: translateY(-1px);
 }
 
 /* =========================================
@@ -300,22 +974,25 @@
 .booking-modal-wrapper {
   display: flex;
   width: 100%;
-  max-width: 900px;
-  height: 600px;
+  max-width: 840px;
+  min-height: 575px;
+  height: auto;
+  max-height: 90vh;
   background: var(--bg-card);
-  border-radius: 20px;
+  border-radius: 18px;
   overflow: hidden;
-  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35);
   position: relative;
-  animation: fadeInUp 0.4s ease-out;
+  animation: fadeInUp 0.3s ease-out;
 }
 
 /* Left Sidebar */
 .booking-sidebar {
-  width: 320px;
+  width: 250px;
+  flex-shrink: 0;
   background-color: #0f172a;
   color: #ffffff;
-  padding: 40px 30px;
+  padding: 28px 22px;
   display: flex;
   flex-direction: column;
   position: relative;
@@ -324,27 +1001,27 @@
 .booking-sidebar-header {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
   color: #ff5e14;
-  font-size: 20px;
+  font-size: 15px;
   font-weight: 800;
-  margin-bottom: 40px;
+  margin-bottom: 20px;
 }
 
 .booking-toggle {
   display: flex;
   background: #1e293b;
-  border-radius: 12px;
-  padding: 4px;
-  margin-bottom: 40px;
+  border-radius: 8px;
+  padding: 3px;
+  margin-bottom: 22px;
 }
 
 .booking-toggle-btn {
   flex: 1;
   text-align: center;
-  padding: 10px 0;
-  border-radius: 8px;
-  font-size: 13px;
+  padding: 6px 0;
+  border-radius: 6px;
+  font-size: 11.5px;
   font-weight: 700;
   cursor: pointer;
   border: none;
@@ -362,17 +1039,17 @@
 .booking-steps {
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  gap: 16px;
   position: relative;
-  padding-left: 20px;
+  padding-left: 16px;
 }
 
 .booking-steps::before {
   content: '';
   position: absolute;
-  top: 6px;
-  bottom: 6px;
-  left: 6px;
+  top: 4px;
+  bottom: 4px;
+  left: 4px;
   width: 2px;
   background-color: rgba(255, 255, 255, 0.1);
   z-index: 1;
@@ -380,8 +1057,8 @@
 
 .booking-step-item {
   position: relative;
-  font-size: 15px;
-  font-weight: 700;
+  font-size: 12.5px;
+  font-weight: 600;
   color: #64748b;
   cursor: pointer;
   transition: color 0.2s;
@@ -393,9 +1070,9 @@
 .booking-step-item::before {
   content: '';
   position: absolute;
-  left: -20px;
-  width: 14px;
-  height: 14px;
+  left: -16px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
   background-color: #1e293b;
   border: 2px solid #475569;
@@ -413,11 +1090,12 @@
 
 .booking-step-item.active {
   color: #ffffff;
+  font-weight: 700;
 }
 .booking-step-item.active::before {
   background-color: #ff5e14;
   border-color: #ff5e14;
-  box-shadow: 0 0 10px rgba(255, 94, 20, 0.5);
+  box-shadow: 0 0 8px rgba(255, 94, 20, 0.5);
 }
 
 .booking-step-item.active.success {
@@ -426,42 +1104,46 @@
 .booking-step-item.active.success::before {
   background-color: #10b981;
   border-color: #10b981;
-  box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
 }
 
 .booking-sidebar-footer {
   margin-top: auto;
-  border-top: 1px solid rgba(255,255,255,0.1);
-  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 14px;
 }
 
 .booking-sidebar-footer-title {
-  font-size: 13px;
+  font-size: 11px;
   color: #64748b;
-  margin-bottom: 4px;
+  margin-bottom: 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .booking-sidebar-total {
-  font-size: 36px;
-  font-weight: 900;
+  font-size: 24px;
+  font-weight: 800;
   color: #ff5e14;
+  line-height: 1.1;
 }
 
 /* Right Main Content */
 .booking-main-content {
   flex: 1;
   background: var(--bg-card);
-  padding: 50px;
+  padding: 26px 32px;
   position: relative;
   overflow-y: auto;
+  box-sizing: border-box;
 }
 
 .booking-close-btn {
   position: absolute;
-  top: 24px;
-  right: 24px;
-  width: 32px;
-  height: 32px;
+  top: 14px;
+  right: 14px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   background: var(--border-color);
   color: var(--text-main);
@@ -470,82 +1152,94 @@
   align-items: center;
   cursor: pointer;
   border: none;
-  transition: background 0.2s;
+  transition: all 0.2s ease;
+  z-index: 50;
 }
 .booking-close-btn:hover {
-  background: #e2e8f0;
+  background: #cbd5e1;
+  transform: scale(1.05);
+}
+
+body.dark .booking-close-btn {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+body.dark .booking-close-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
 }
 
 .booking-main-title {
-  font-size: 28px;
-  font-weight: 900;
+  font-size: 18px;
+  font-weight: 800;
   color: var(--text-main);
-  margin: 0 0 8px 0;
+  margin: 0 0 4px 0;
+  letter-spacing: -0.2px;
 }
 
 .booking-main-subtitle {
-  font-size: 15px;
+  font-size: 12px;
   color: var(--text-muted);
-  margin: 0 0 40px 0;
+  margin: 0 0 16px 0;
+  line-height: 1.4;
 }
 
 /* Credit Card UI */
 .cc-graphic {
   background: linear-gradient(135deg, #ff8008, #ff5e14);
-  border-radius: 16px;
-  padding: 30px;
+  border-radius: 12px;
+  padding: 16px 20px;
   color: #ffffff;
-  box-shadow: 0 15px 30px rgba(255, 94, 20, 0.25);
-  margin-bottom: 40px;
+  box-shadow: 0 10px 20px rgba(255, 94, 20, 0.2);
+  margin-bottom: 18px;
   position: relative;
   overflow: hidden;
 }
 
 .cc-chip {
-  width: 45px;
-  height: 32px;
-  background: rgba(255,255,255,0.3);
-  border-radius: 6px;
-  margin-bottom: 24px;
+  width: 34px;
+  height: 24px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 5px;
+  margin-bottom: 14px;
 }
 
 .cc-number {
   font-family: 'Courier New', Courier, monospace;
-  font-size: 22px;
-  letter-spacing: 4px;
+  font-size: 16px;
+  letter-spacing: 2px;
   font-weight: 600;
-  margin-bottom: 24px;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  margin-bottom: 14px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .cc-footer {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  font-size: 13px;
+  font-size: 11px;
   font-weight: 700;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
 }
 
 .cc-form-group {
-  margin-bottom: 20px;
+  margin-bottom: 12px;
 }
 .cc-form-label {
-  font-size: 11px;
-  font-weight: 800;
+  font-size: 10px;
+  font-weight: 700;
   color: var(--text-muted);
   text-transform: uppercase;
-  margin-bottom: 8px;
+  margin-bottom: 4px;
   display: block;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
 }
 .cc-input {
   width: 100%;
   background: var(--bg-main);
   border: 1px solid var(--border-color);
-  border-radius: 12px;
-  padding: 16px;
-  font-size: 15px;
+  border-radius: 8px;
+  padding: 9px 12px;
+  font-size: 12.5px;
   color: var(--text-main);
   font-weight: 600;
   outline: none;
@@ -561,18 +1255,18 @@
   background: #ff5e14;
   color: #fff;
   border: none;
-  border-radius: 12px;
-  padding: 18px;
-  font-size: 16px;
-  font-weight: 800;
+  border-radius: 9px;
+  padding: 10px 16px;
+  font-size: 13.5px;
+  font-weight: 700;
   cursor: pointer;
   transition: all 0.2s;
-  margin-top: 10px;
+  margin-top: 8px;
 }
 .cc-pay-btn:hover:not(:disabled) {
   background: #e04d0f;
-  transform: translateY(-2px);
-  box-shadow: 0 10px 20px rgba(255, 94, 20, 0.2);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 16px rgba(255, 94, 20, 0.2);
 }
 .cc-pay-btn:disabled {
   opacity: 0.6;
@@ -583,19 +1277,247 @@
   animation: fadeIn 0.3s ease-out;
 }
 
+/* =========================================
+   BILLING SUMMARY CARD & CHECKOUT DESIGN
+   ========================================= */
+.billing-summary-card {
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  padding: 16px 20px;
+  border-radius: 14px;
+  color: #ffffff;
+  margin-bottom: 16px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.25);
+}
+
+.billing-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  position: relative;
+  z-index: 1;
+}
+
+.billing-card-title {
+  font-size: 11.5px;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin: 0;
+  font-weight: 800;
+}
+
+.billing-card-bike-pill {
+  font-size: 11px;
+  font-weight: 800;
+  color: #ff5e14;
+  background: rgba(255, 94, 20, 0.12);
+  border: 1px solid rgba(255, 94, 20, 0.25);
+  padding: 2px 8px;
+  border-radius: 12px;
+}
+
+.billing-details-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  position: relative;
+  z-index: 1;
+}
+
+.billing-detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  color: #cbd5e1;
+}
+
+.billing-detail-row .billing-val {
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.billing-detail-row.highlight-discount .billing-label {
+  color: #34d399;
+}
+
+.billing-detail-row.highlight-discount .discount-val {
+  color: #34d399;
+  font-weight: 800;
+}
+
+.billing-detail-row .free-val {
+  color: #10b981;
+  font-weight: 700;
+}
+
+.billing-card-footer {
+  margin-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  padding-top: 14px;
+  position: relative;
+  z-index: 1;
+}
+
+.billing-total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.billing-total-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: #cbd5e1;
+}
+
+.billing-total-sub {
+  font-size: 10.5px;
+  color: #64748b;
+  margin-top: 1px;
+}
+
+.billing-total-val {
+  font-size: 20px;
+  font-weight: 900;
+  color: #fbbf24;
+}
+
+.billing-action-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.btn-billing-back {
+  flex: 1;
+  text-align: center;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 14px;
+  font-size: 13px;
+}
+
+.btn-billing-pay {
+  flex: 2;
+  margin-top: 0 !important;
+  padding: 12px 18px !important;
+  font-size: 14px !important;
+}
+
+/* =========================================
+   LAPTOP & COMPUTER EXPANSION (FILL WHITE SPACE)
+   Only applies on desktop / laptop screens (1025px and wider)
+   ========================================= */
+@media (min-width: 1025px) {
+  .booking-modal-wrapper {
+    max-width: 860px;
+    min-height: 590px;
+  }
+
+  .booking-main-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 590px;
+    box-sizing: border-box;
+  }
+
+  .payment-step-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    height: 100%;
+    min-height: 510px;
+    box-sizing: border-box;
+  }
+
+  .payment-step-content .billing-summary-card {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 24px 28px;
+    margin-bottom: 20px;
+    border-radius: 16px;
+    box-shadow: 0 16px 36px rgba(15, 23, 42, 0.35);
+  }
+
+  .payment-step-content .billing-card-header {
+    margin-bottom: 16px;
+  }
+
+  .payment-step-content .billing-card-title {
+    font-size: 13px;
+    letter-spacing: 1px;
+    font-weight: 800;
+  }
+
+  .payment-step-content .billing-card-bike-pill {
+    font-size: 12px;
+    padding: 3px 12px;
+    border-radius: 16px;
+  }
+
+  .payment-step-content .billing-details-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .payment-step-content .billing-detail-row {
+    font-size: 13.5px;
+    padding: 2px 0;
+  }
+
+  .payment-step-content .billing-card-footer {
+    margin-top: 18px;
+    padding-top: 16px;
+  }
+
+  .payment-step-content .billing-total-label {
+    font-size: 14.5px;
+  }
+
+  .payment-step-content .billing-total-val {
+    font-size: 26px;
+  }
+
+  .payment-step-content .billing-action-buttons {
+    margin-top: auto;
+    gap: 14px;
+  }
+
+  .payment-step-content .btn-billing-back {
+    padding: 13px 20px;
+    font-size: 14px;
+  }
+
+  .payment-step-content .btn-billing-pay {
+    padding: 14px 24px !important;
+    font-size: 15px !important;
+  }
+}
+
 /* Premium Verify Button Effect & Animations */
 .verify-btn-effect {
   position: relative !important;
   background: linear-gradient(135deg, #ff5e14 0%, #ff7635 100%) !important;
   color: #ffffff !important;
   border: none !important;
-  border-radius: 12px !important;
-  font-weight: 800 !important;
+  border-radius: 9px !important;
+  font-weight: 700 !important;
   cursor: pointer !important;
   overflow: hidden !important;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-  box-shadow: 0 6px 20px rgba(255, 94, 20, 0.35) !important;
-  letter-spacing: 0.5px !important;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  box-shadow: 0 4px 14px rgba(255, 94, 20, 0.3) !important;
+  letter-spacing: 0.3px !important;
 }
 
 .verify-btn-effect::before {
@@ -761,55 +1683,56 @@
   }
 
   .bikes-grid {
-    grid-template-columns: 1fr;
-    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 18px;
   }
 
   .bike-card-img-wrap {
-    height: 210px;
+    height: 150px;
   }
 
   .bike-card-content {
-    padding: 20px;
+    padding: 10px 4px 4px 4px;
   }
 
   /* Responsive Modal for Phone */
   .booking-modal-overlay {
-    padding: 12px;
+    padding: 10px;
     align-items: center;
   }
 
   .booking-modal-wrapper {
     flex-direction: column;
     height: auto;
-    max-height: 92vh;
-    border-radius: 16px;
+    max-height: 90vh;
+    border-radius: 14px;
     overflow-y: auto;
   }
 
   .booking-sidebar {
     width: 100%;
-    padding: 20px 20px 16px 20px;
+    padding: 16px 16px 12px 16px;
     box-sizing: border-box;
   }
 
   .booking-sidebar-header {
-    margin-bottom: 14px;
-    font-size: 18px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    padding-right: 36px;
   }
 
   .booking-toggle {
-    margin-bottom: 14px;
+    margin-bottom: 12px;
   }
 
   .booking-steps {
     flex-direction: row;
-    gap: 12px;
+    gap: 8px;
     padding-left: 0;
-    margin-bottom: 14px;
+    margin-bottom: 10px;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
-    padding-bottom: 4px;
+    padding-bottom: 2px;
   }
 
   .booking-steps::before {
@@ -817,10 +1740,10 @@
   }
 
   .booking-step-item {
-    font-size: 13px;
+    font-size: 11px;
     white-space: nowrap;
-    padding: 4px 10px;
-    border-radius: 6px;
+    padding: 3px 8px;
+    border-radius: 5px;
     background: rgba(255, 255, 255, 0.05);
   }
 
@@ -832,47 +1755,67 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-top: 12px;
-    margin-top: 4px;
+    padding-top: 10px;
+    margin-top: 2px;
   }
 
   .booking-sidebar-total {
-    font-size: 24px;
+    font-size: 20px;
   }
 
   .booking-main-content {
-    padding: 24px 18px;
+    padding: 18px 16px;
     overflow-y: visible;
   }
 
   .booking-close-btn {
-    top: 14px;
-    right: 14px;
+    top: 12px;
+    right: 12px;
+    width: 28px;
+    height: 28px;
+    background: rgba(255, 255, 255, 0.14) !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+  }
+  .booking-close-btn:hover {
+    background: rgba(255, 255, 255, 0.28) !important;
   }
 
   .booking-main-title {
-    font-size: 22px;
+    font-size: 17px;
   }
 
   .booking-main-subtitle {
-    font-size: 13px;
-    margin-bottom: 24px;
+    font-size: 11.5px;
+    margin-bottom: 14px;
   }
 
   .cc-graphic {
-    padding: 20px;
-    border-radius: 14px;
-    margin-bottom: 24px;
+    padding: 14px;
+    border-radius: 10px;
+    margin-bottom: 16px;
   }
 
   .cc-number {
-    font-size: clamp(15px, 4.5vw, 20px);
+    font-size: clamp(14px, 4vw, 18px);
     letter-spacing: 2px;
-    margin-bottom: 18px;
+    margin-bottom: 14px;
   }
 
   .kyc-grid {
     grid-template-columns: 1fr !important;
+  }
+}
+
+@media (max-width: 580px) {
+  .bikes-grid {
+    grid-template-columns: 1fr;
+    max-width: 380px;
+    margin: 0 auto;
+  }
+
+  .bike-card-img-wrap {
+    height: 155px;
   }
 }
 
@@ -896,32 +1839,74 @@
   }
 
   .bike-card-content {
-    padding: 16px;
-  }
-
-  .specs-grid {
-    gap: 8px;
-  }
-
-  .spec-item {
-    padding: 6px 8px;
+    padding: 10px 4px 4px 4px;
   }
 
   .bike-card-price {
-    font-size: 20px;
-    margin-bottom: 16px;
+    font-size: 18px;
   }
 
   .btn-book {
-    padding: 13px;
-    font-size: 14px;
+    padding: 8px 16px;
+    font-size: 13px;
+  }
+
+  .details-modal-card {
+    max-width: 96%;
+    padding: 12px 14px;
+  }
+
+  .details-modal-img-wrap {
+    height: 130px;
   }
 }
 
+/* Booking Rate & Duration Box (Dark Mode Adaptive) */
+.booking-rate-box {
+  background: var(--bg-main);
+  border: 1px solid var(--border-color);
+  padding: 10px 14px;
+  border-radius: 8px;
+  margin-top: 4px;
+  transition: background-color 0.2s, border-color 0.2s;
+}
 
+.booking-rate-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12.5px;
+}
 
+.booking-rate-row:first-child {
+  margin-bottom: 6px;
+}
 
+.booking-rate-label {
+  color: var(--text-muted);
+  font-weight: 500;
+}
 
+.booking-rate-val {
+  color: var(--text-main);
+  font-weight: 700;
+}
 
+.booking-timing-highlight {
+  color: var(--brand-orange);
+  font-weight: 600;
+  margin-left: 5px;
+}
 
+/* Computer & Laptop Devices (Desktops, Laptops): Increase catalog 4px on both sides */
+@media (min-width: 1025px) {
+  .bikes-grid-wrapper {
+    max-width: 1328px; /* +4px on left and +4px on right (+8px total) */
+  }
+
+  .bike-card {
+    padding-left: 16px; /* +4px on left side from 12px */
+    padding-right: 16px; /* +4px on right side from 12px */
+  }
+}
 

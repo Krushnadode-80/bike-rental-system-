@@ -110,12 +110,14 @@ export const otpSchema = z.string().trim().regex(/^\d{6}$/, 'Enter the 6-digit v
 export const bookingDatesSchema = z.object({
   bookingDate: z.string().min(1, 'Select a pickup date.'),
   returnDate: z.string().min(1, 'Select a return date.'),
-  pickupTime: z.string(),
-  returnTime: z.string(),
+  pickupTime: z.string().optional(),
+  returnTime: z.string().optional(),
   rentalType: z.enum(['daily', 'hourly']),
 }).superRefine((data, ctx) => {
-  const startValue = data.rentalType === 'hourly' ? `${data.bookingDate}T${data.pickupTime}` : data.bookingDate;
-  const endValue = data.rentalType === 'hourly' ? `${data.returnDate}T${data.returnTime}` : data.returnDate;
+  const pTime = data.pickupTime || '09:00';
+  const rTime = data.returnTime || '18:00';
+  const startValue = `${data.bookingDate}T${pTime}`;
+  const endValue = `${data.returnDate}T${rTime}`;
   const start = new Date(startValue);
   const end = new Date(endValue);
   if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) {
@@ -124,14 +126,16 @@ export const bookingDatesSchema = z.object({
   }
   const today = new Date();
   const localToday = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-  const pickupIsPast = data.rentalType === 'hourly'
-    ? start < new Date(new Date().setSeconds(0, 0))
-    : data.bookingDate < localToday;
-  if (pickupIsPast) {
-    ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['bookingDate'], message: 'Pickup date and time cannot be in the past.' });
+  if (data.bookingDate < localToday) {
+    ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['bookingDate'], message: 'Pickup date cannot be in the past.' });
+  } else if (data.rentalType === 'hourly' && data.bookingDate === localToday) {
+    const nowWithGrace = new Date(Date.now() - 5 * 60 * 1000);
+    if (start < nowWithGrace) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['pickupTime'], message: 'Pickup time cannot be in the past.' });
+    }
   }
   if (end <= start) {
-    ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['returnDate'], message: 'Return must be after pickup.' });
+    ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['returnTime'], message: 'Return timing must be after pickup timing.' });
   }
 });
 

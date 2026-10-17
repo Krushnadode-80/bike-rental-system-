@@ -1,0 +1,838 @@
+/* =========================================
+   BIKE DETAILS PAGE STYLING (Matching Reference UI)
+   ========================================= */
+
+.bike-details-container {
+  min-height: calc(100vh - 140px);
+  background-color: var(--bg-main);
+  padding: 30px clamp(16px, 4vw, 40px) 80px clamp(16px, 4vw, 40px);
+  box-sizing: border-box;
+}
+
+.bike-details-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Breadcrumb Bar */
+.bike-details-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.btn-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 6px 12px;
+  border-radius: 8px;
+}
+
+.btn-back-link:hover {
+  color: var(--brand-orange);
+  background-color: rgba(255, 94, 20, 0.08);
+}
+
+.bike-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.bike-breadcrumb span.current {
+  color: var(--text-main);
+  font-weight: 700;
+}
+
+/* =========================================
+   TOP TWO-COLUMN SECTION (From Screenshot)
+   ========================================= */
+.bike-hero-grid {
+  display: grid;
+  grid-template-columns: 420px 1fr;
+  gap: 24px;
+  margin-bottom: 32px;
+  align-items: stretch;
+}
+
+/* Left Card: Image Showcase */
+.bike-image-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+
+[data-theme="black"] .bike-image-card {
+  background: #0f172a;
+  border-color: #1e293b;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
+}
+
+.bike-image-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  z-index: 2;
+}
+
+.details-status-badge {
+  padding: 5px 12px;
+  border-radius: 50px;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+
+.details-status-available {
+  background-color: #059669;
+  color: #ffffff;
+}
+
+.details-status-booked {
+  background-color: #ef4444;
+  color: #ffffff;
+}
+
+.btn-details-fav {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid var(--border-color);
+  background: var(--bg-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.btn-details-fav:hover {
+  transform: scale(1.1);
+  border-color: #ef4444;
+}
+
+.bike-image-display {
+  width: 100%;
+  height: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  border-radius: 14px;
+  background-color: #f8fafc;
+}
+
+[data-theme="black"] .bike-image-display {
+  background-color: #020617;
+}
+
+.bike-image-display img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.bike-image-display:hover img {
+  transform: scale(1.05);
+}
+
+.bike-image-footer-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border-color);
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.bike-image-footer-meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: 600;
+}
+
+/* Right Card: Overview & Location Selection */
+.bike-info-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  padding: 32px 36px;
+  display: flex;
+  flex-direction: column;
+}
+
+[data-theme="black"] .bike-info-card {
+  background: #0f172a;
+  border-color: #1e293b;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
+}
+
+.bike-info-header {
+  margin-bottom: 20px;
+}
+
+.bike-category-badge {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--brand-orange);
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+  display: block;
+}
+
+.bike-main-title {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--text-main);
+  margin: 0 0 6px 0;
+  line-height: 1.2;
+}
+
+.bike-main-subrow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.bike-details-rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(245, 158, 11, 0.12);
+  color: #b45309;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-weight: 700;
+}
+
+[data-theme="black"] .bike-details-rating {
+  color: #fbbf24;
+}
+
+/* 3 Price Tiers Row (Matching UI Screenshot) */
+.price-tiers-row {
+  display: flex;
+  gap: 14px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+
+.price-tier-box {
+  background: var(--bg-main);
+  border: 1.5px solid var(--border-color);
+  border-radius: 12px;
+  padding: 10px 14px 12px 14px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  flex: 1;
+  min-width: 100px;
+  max-width: 140px;
+  position: relative;
+}
+
+.price-tier-box:hover {
+  border-color: #10b981;
+  background-color: #f0fdf4;
+  transform: translateY(-2px);
+}
+
+[data-theme="black"] .price-tier-box:hover {
+  background-color: rgba(16, 185, 129, 0.12);
+  border-color: #10b981;
+}
+
+.price-tier-box.active {
+  background-color: #f0fdf4;
+  border-color: #10b981;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.2);
+  transform: translateY(-2px);
+}
+
+[data-theme="black"] .price-tier-box.active {
+  background-color: rgba(16, 185, 129, 0.18);
+  border-color: #10b981;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.28);
+}
+
+.tier-badge-wrap {
+  min-height: 18px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.tier-badge {
+  font-size: 9.5px;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 10px;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  display: inline-block;
+  line-height: 1.2;
+}
+
+.tier-badge.standard {
+  background: rgba(148, 163, 184, 0.16);
+  color: var(--text-muted);
+}
+
+.tier-badge.save {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+[data-theme="black"] .tier-badge.save {
+  background: rgba(59, 130, 246, 0.22);
+  color: #93c5fd;
+}
+
+.tier-badge.best {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+[data-theme="black"] .tier-badge.best {
+  background: rgba(245, 158, 11, 0.22);
+  color: #fcd34d;
+}
+
+.tier-price {
+  font-size: 17px;
+  font-weight: 800;
+  color: #047857;
+  line-height: 1.1;
+  margin-bottom: 4px;
+}
+
+[data-theme="black"] .tier-price {
+  color: #34d399;
+}
+
+.tier-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: capitalize;
+}
+
+/* Active Plan Highlights */
+.plan-summary-strip {
+  background: var(--bg-main);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 9px 14px;
+  margin-bottom: 22px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  animation: fadeIn 0.2s ease;
+}
+
+.plan-summary-tag {
+  display: inline-block;
+  background: #10b981;
+  color: #ffffff;
+  font-size: 10.5px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  flex-shrink: 0;
+}
+
+.plan-summary-text {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+/* Location Selector Section (Matching UI Screenshot) */
+.locations-section {
+  margin-bottom: 26px;
+}
+
+.locations-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 12px;
+}
+
+.locations-chips-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  max-height: 180px;
+  overflow-y: auto;
+  padding-right: 4px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 163, 184, 0.3) transparent;
+}
+
+.locations-chips-grid::-webkit-scrollbar {
+  width: 4px;
+}
+
+.locations-chips-grid::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.3);
+  border-radius: 10px;
+}
+
+.location-chip {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-main);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.location-chip:hover {
+  border-color: #94a3b8;
+  background-color: var(--bg-main);
+}
+
+/* Exact match for the green selected pill in user's screenshot */
+.location-chip.active {
+  background-color: #dcfce7;
+  border-color: #86efac;
+  color: #166534;
+  font-weight: 700;
+  box-shadow: 0 1px 4px rgba(22, 101, 52, 0.1);
+}
+
+[data-theme="black"] .location-chip.active {
+  background-color: rgba(16, 185, 129, 0.2);
+  border-color: #10b981;
+  color: #34d399;
+}
+
+/* Selected Location & CTA Bar */
+.details-cta-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-color);
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.selected-hub-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.selected-hub-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.selected-hub-name {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 2px;
+}
+
+.btn-main-book {
+  background-color: var(--brand-orange);
+  color: #ffffff;
+  border: none;
+  padding: 13px 28px;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 14px rgba(255, 94, 20, 0.28);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-main-book:hover:not(:disabled) {
+  background-color: #e04e0b;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(255, 94, 20, 0.38);
+}
+
+.btn-main-book:disabled {
+  background-color: var(--border-color);
+  color: var(--text-muted);
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.selected-plan-cta-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.selected-plan-cta-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.selected-plan-cta-val {
+  font-size: 17px;
+  font-weight: 900;
+  color: var(--brand-orange);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 1px;
+}
+
+.selected-plan-savings-pill {
+  font-size: 10px;
+  font-weight: 800;
+  background: #dcfce7;
+  color: #15803d;
+  padding: 2px 7px;
+  border-radius: 12px;
+}
+
+[data-theme="black"] .selected-plan-savings-pill {
+  background: rgba(16, 185, 129, 0.2);
+  color: #34d399;
+}
+
+/* Modal Plan Selector Tabs */
+.modal-plan-selector {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.modal-plan-chip {
+  background: var(--bg-card);
+  border: 1.5px solid var(--border-color);
+  border-radius: 9px;
+  padding: 8px 6px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  position: relative;
+}
+
+.modal-plan-chip:hover {
+  border-color: #10b981;
+}
+
+.modal-plan-chip.active {
+  background-color: #f0fdf4;
+  border-color: #10b981;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.18);
+}
+
+[data-theme="black"] .modal-plan-chip.active {
+  background-color: rgba(16, 185, 129, 0.16);
+  border-color: #10b981;
+}
+
+.modal-plan-chip span {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.modal-plan-chip strong {
+  font-size: 13.5px;
+  font-weight: 800;
+  color: var(--text-main);
+}
+
+.modal-plan-chip.active strong {
+  color: #047857;
+}
+
+[data-theme="black"] .modal-plan-chip.active strong {
+  color: #34d399;
+}
+
+.chip-badge {
+  position: absolute;
+  top: -8px;
+  right: 4px;
+  font-size: 8.5px !important;
+  font-weight: 800 !important;
+  padding: 1px 5px;
+  border-radius: 8px;
+  background: #3b82f6;
+  color: #ffffff !important;
+  line-height: 1.2;
+}
+
+.chip-badge.best {
+  background: #ff5e14;
+}
+
+.booking-savings-highlight {
+  background: rgba(16, 185, 129, 0.12);
+  color: #047857;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  padding: 7px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  margin-top: 10px;
+  text-align: center;
+}
+
+[data-theme="black"] .booking-savings-highlight {
+  color: #34d399;
+  background: rgba(16, 185, 129, 0.18);
+}
+
+/* =========================================
+   SPECS & PERKS LOWER SECTIONS
+   ========================================= */
+.details-section-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  padding: 28px 32px;
+  margin-bottom: 28px;
+}
+
+[data-theme="black"] .details-section-card {
+  background: #0f172a;
+  border-color: #1e293b;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
+}
+
+.details-card-heading {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--text-main);
+  margin: 0 0 18px 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Full Specs Grid */
+.details-full-specs-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.details-spec-tile {
+  background: var(--bg-main);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.details-spec-tile:hover {
+  border-color: var(--brand-orange);
+  transform: translateY(-2px);
+}
+
+.details-spec-tile .spec-icon-wrap {
+  color: var(--brand-orange);
+  margin-bottom: 8px;
+}
+
+.details-spec-tile .spec-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  margin-bottom: 4px;
+}
+
+.details-spec-tile .spec-value {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--text-main);
+}
+
+/* Perks Grid */
+.details-perks-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+
+.details-perk-card {
+  background: var(--bg-main);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.details-perk-icon-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.details-perk-icon-title svg {
+  color: #10b981;
+  flex-shrink: 0;
+}
+
+.details-perk-desc {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.45;
+  margin: 0;
+}
+
+/* Required Documents & Terms */
+.terms-points-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.term-point-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: var(--bg-main);
+  border: 1px solid var(--border-color);
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-size: 13px;
+  color: var(--text-main);
+  line-height: 1.4;
+}
+
+.term-point-item svg {
+  color: var(--brand-orange);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* Similar Bikes Section */
+.similar-bikes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+/* =========================================
+   RESPONSIVE DESIGN BREAKPOINTS
+   ========================================= */
+@media (max-width: 992px) {
+  .bike-hero-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .bike-image-display {
+    height: 240px;
+  }
+
+  .details-full-specs-grid,
+  .details-perks-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .bike-details-container {
+    padding: 20px 14px 60px 14px;
+  }
+
+  .bike-info-card,
+  .bike-image-card,
+  .details-section-card {
+    padding: 20px 16px;
+    border-radius: 16px;
+  }
+
+  .bike-main-title {
+    font-size: 22px;
+  }
+
+  .price-tiers-row {
+    flex-direction: column;
+  }
+
+  .price-tier-box {
+    max-width: 100%;
+  }
+
+  .details-full-specs-grid,
+  .details-perks-grid,
+  .terms-points-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .details-cta-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .btn-main-book {
+    width: 100%;
+    justify-content: center;
+  }
+}
