@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
-import client from '../api/client';
+import client, { getMediaUrl } from '../api/client';
 import { 
   Bike, 
   Menu, 
@@ -154,8 +154,7 @@ const Navbar = () => {
   // Avatar URL with smart fallback
   const getAvatarUrl = () => {
     if (user?.profile_photo) {
-      if (user.profile_photo.startsWith('http')) return user.profile_photo;
-      return `http://localhost:8000${user.profile_photo}`;
+      return getMediaUrl(user.profile_photo);
     }
     return 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&auto=format&fit=crop';
   };

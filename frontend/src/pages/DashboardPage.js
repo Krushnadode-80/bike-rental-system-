@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import client from '../api/client';
+import client, { getMediaUrl } from '../api/client';
 import { useAuth } from '../context/AuthContext';
 import {
   Cloud,
@@ -446,7 +446,7 @@ const DashboardPage = () => {
               <div style={{ display: 'grid', gridTemplateColumns: '190px minmax(0, 1fr)', gap: '24px', marginBottom: '22px' }}>
                 <div>
                   {selectedUser.profile_photo ? (
-                    <img src={selectedUser.profile_photo} alt="Profile" style={{ width: '100%', height: '190px', borderRadius: '12px', objectFit: 'cover', border: '1px solid #e2e8f0' }} />
+                    <img src={getMediaUrl(selectedUser.profile_photo)} alt="Profile" style={{ width: '100%', height: '190px', borderRadius: '12px', objectFit: 'cover', border: '1px solid #e2e8f0' }} />
                   ) : (
                     <div style={{ width: '100%', height: '190px', borderRadius: '12px', background: '#e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '42px', color: '#94a3b8' }}>
                       {selectedUser.name.charAt(0).toUpperCase()}

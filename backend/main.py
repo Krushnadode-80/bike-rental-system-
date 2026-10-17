@@ -152,18 +152,26 @@ if not os.path.exists("uploads"):
     os.makedirs("uploads")
 
 app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
+app.mount("/api/uploads", StaticFiles(directory="uploads"), name="api_uploads")
 
+# Support both root paths and /api prefix paths for seamless local and Vercel services routing
+app.include_router(upload_router, prefix="/api")
+app.include_router(upload_router)
+app.include_router(auth_router, prefix="/api")
 app.include_router(auth_router)
+app.include_router(bike_router, prefix="/api")
 app.include_router(bike_router)
+app.include_router(booking_router, prefix="/api")
 app.include_router(booking_router)
+app.include_router(dashboard_router, prefix="/api")
 app.include_router(dashboard_router)
+app.include_router(payment_router, prefix="/api")
 app.include_router(payment_router)
 app.include_router(chat_router)
 
 @app.get("/")
+@app.get("/api")
 def home():
     return {
         "message": "Bike Rental API Running"
     }
-
-# Trigger reload

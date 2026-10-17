@@ -6,6 +6,7 @@ import '../Home.css';
 import './ProfileModal.css';
 import toast from 'react-hot-toast';
 import { profileSchema, fileUploadSchema, validateWithToast } from '../validation/schemas';
+import { getMediaUrl } from '../api/client';
 
 const ProfileModal = ({ onClose }) => {
   const { user, updateProfile, uploadKYC, refreshUser } = useAuth();
@@ -36,8 +37,7 @@ const ProfileModal = ({ onClose }) => {
 
   const getAvatarUrl = () => {
     if (user?.profile_photo) {
-      if (user.profile_photo.startsWith('http')) return user.profile_photo;
-      return `http://localhost:8000${user.profile_photo}`;
+      return getMediaUrl(user.profile_photo);
     }
     return null;
   };
