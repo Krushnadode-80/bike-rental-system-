@@ -165,12 +165,25 @@ def startup_db_init():
     except Exception as e:
         print(f"DATABASE INITIALIZATION ERROR: {e}")
 
-# Create uploads dir if it doesn't exist
-if not os.path.exists("uploads"):
-    os.makedirs("uploads")
+# Safe uploads directory initialization for serverless platforms (e.g. Vercel read-only filesystem)
+base_dir = os.path.dirname(os.path.abspath(__file__))
+local_uploads_dir = os.path.join(base_dir, "uploads")
+tmp_uploads_dir = os.path.join("/tmp", "uploads") if os.name != "nt" else os.path.join(os.environ.get("TEMP", "C:\\temp"), "uploads")
 
-app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
-app.mount("/api/uploads", StaticFiles(directory="uploads"), name="api_uploads")
+if os.path.isdir(local_uploads_dir):
+    uploads_dir = local_uploads_dir
+else:
+    try:
+        os.makedirs(local_uploads_dir, exist_ok=True)
+        uploads_dir = local_uploads_dir
+    except OSError:
+        # Running in read-only serverless environment (e.g. Vercel AWS Lambda /var/task)
+        os.makedirs(tmp_uploads_dir, exist_ok=True)
+        uploads_dir = tmp_uploads_dir
+
+if os.path.isdir(uploads_dir):
+    app.mount("/uploads", StaticFiles(directory=uploads_dir), name="uploads")
+    app.mount("/api/uploads", StaticFiles(directory=uploads_dir), name="api_uploads")
 
 # Support both root paths and /api prefix paths for seamless local and Vercel services routing
 app.include_router(upload_router, prefix="/api")
