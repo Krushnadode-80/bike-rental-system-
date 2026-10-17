@@ -156,7 +156,7 @@ const Navbar = () => {
     if (user?.profile_photo) {
       return getMediaUrl(user.profile_photo);
     }
-    return 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&auto=format&fit=crop';
+    return '/default-avatar.png';
   };
 
   // Hide the global Navbar on dashboard as it has custom admin layout
@@ -285,7 +285,7 @@ const Navbar = () => {
                     className="nav-avatar-img"
                     onError={(e) => {
                       e.target.onerror = null;
-                      e.target.src = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&auto=format&fit=crop';
+                      e.target.src = '/default-avatar.png';
                     }}
                   />
                 </div>
@@ -304,7 +304,7 @@ const Navbar = () => {
                           className="nav-avatar-img"
                           onError={(e) => {
                             e.target.onerror = null;
-                            e.target.src = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&auto=format&fit=crop';
+                            e.target.src = '/default-avatar.png';
                           }}
                         />
                       </div>

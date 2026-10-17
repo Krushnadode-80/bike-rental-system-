@@ -445,13 +445,15 @@ const DashboardPage = () => {
             <div style={{ padding: '20px 24px 22px' }}>
               <div style={{ display: 'grid', gridTemplateColumns: '190px minmax(0, 1fr)', gap: '24px', marginBottom: '22px' }}>
                 <div>
-                  {selectedUser.profile_photo ? (
-                    <img src={getMediaUrl(selectedUser.profile_photo)} alt="Profile" style={{ width: '100%', height: '190px', borderRadius: '12px', objectFit: 'cover', border: '1px solid #e2e8f0' }} />
-                  ) : (
-                    <div style={{ width: '100%', height: '190px', borderRadius: '12px', background: '#e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '42px', color: '#94a3b8' }}>
-                      {selectedUser.name.charAt(0).toUpperCase()}
-                    </div>
-                  )}
+                  <img
+                    src={selectedUser.profile_photo ? getMediaUrl(selectedUser.profile_photo) : '/default-avatar.png'}
+                    alt="Profile"
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = '/default-avatar.png';
+                    }}
+                    style={{ width: '100%', height: '190px', borderRadius: '12px', objectFit: 'cover', border: '1px solid #e2e8f0', background: '#f8fafc' }}
+                  />
                   <div style={{ marginTop: '10px', textAlign: 'center' }}>
                     <span style={{ display: 'inline-block', padding: '7px 16px', borderRadius: '20px', fontSize: '13px', fontWeight: 700, background: selectedUser.admin_verified ? '#dcfce7' : '#fee2e2', color: selectedUser.admin_verified ? '#16a34a' : '#ef4444' }}>
                       {selectedUser.admin_verified ? 'Verified by Admin' : 'Unverified'}

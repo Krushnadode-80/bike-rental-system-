@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import '../Home.css';
 import toast from 'react-hot-toast';
 import { profileSchema, validateWithToast } from '../validation/schemas';
+import { getMediaUrl } from '../api/client';
 
 const ProfilePage = () => {
   const { user, updateProfile } = useAuth();
@@ -59,9 +60,23 @@ const ProfilePage = () => {
             
             {/* User Card */}
             <div style={{ backgroundColor: '#fff', padding: '30px', borderRadius: '20px', boxShadow: '0 4px 20px rgba(0,0,0,0.05)', border: '1px solid #f1f5f9', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
-              <div style={{ width: '100px', height: '100px', borderRadius: '50%', backgroundColor: '#ff5e14', color: '#fff', display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '36px', fontWeight: 800, marginBottom: '20px' }}>
-                {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
-              </div>
+              <img
+                src={user.profile_photo ? getMediaUrl(user.profile_photo) : '/default-avatar.png'}
+                alt={user.name || 'User'}
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = '/default-avatar.png';
+                }}
+                style={{
+                  width: '100px',
+                  height: '100px',
+                  borderRadius: '50%',
+                  objectFit: 'cover',
+                  border: '3px solid var(--brand-orange)',
+                  marginBottom: '20px',
+                  boxShadow: '0 4px 15px rgba(255, 94, 20, 0.2)'
+                }}
+              />
               <h2 style={{ fontSize: '24px', fontWeight: 800, marginBottom: '4px' }}>{user.name}</h2>
               <p style={{ color: '#64748b', fontSize: '15px', marginBottom: '20px' }}>{user.email}</p>
               

@@ -39,7 +39,7 @@ const ProfileModal = ({ onClose }) => {
     if (user?.profile_photo) {
       return getMediaUrl(user.profile_photo);
     }
-    return null;
+    return '/default-avatar.png';
   };
 
   const handleImageUpload = async (file) => {
@@ -103,38 +103,24 @@ const ProfileModal = ({ onClose }) => {
             
             {/* Avatar & Camera Trigger */}
             <div className="profile-user-card-avatar-wrap">
-              <div style={{ position: 'relative', width: '56px', height: '56px', margin: '0 auto 6px auto' }}>
-                {getAvatarUrl() ? (
-                  <img
-                    src={getAvatarUrl()}
-                    alt={user.name || 'User'}
-                    style={{
-                      width: '56px',
-                      height: '56px',
-                      borderRadius: '50%',
-                      objectFit: 'cover',
-                      display: 'block',
-                      border: '2.5px solid var(--brand-orange)',
-                      boxShadow: '0 3px 10px rgba(255, 94, 20, 0.25)'
-                    }}
-                  />
-                ) : (
-                  <div style={{
-                    width: '56px',
-                    height: '56px',
+              <div style={{ position: 'relative', width: '60px', height: '60px', margin: '0 auto 6px auto' }}>
+                <img
+                  src={getAvatarUrl()}
+                  alt={user.name || 'User'}
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = '/default-avatar.png';
+                  }}
+                  style={{
+                    width: '60px',
+                    height: '60px',
                     borderRadius: '50%',
-                    backgroundColor: '#ff5e14',
-                    color: '#ffffff',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    fontSize: '22px',
-                    fontWeight: 800,
+                    objectFit: 'cover',
+                    display: 'block',
+                    border: '2.5px solid var(--brand-orange)',
                     boxShadow: '0 3px 10px rgba(255, 94, 20, 0.25)'
-                  }}>
-                    {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
-                  </div>
-                )}
+                  }}
+                />
 
                 <label
                   htmlFor="profile-modal-image-input"
