@@ -47,6 +47,7 @@ const BikeDetailsPage = () => {
   const [bike, setBike] = useState(null);
   const [allBikes, setAllBikes] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [bikeError, setBikeError] = useState(null);
 
   // Reference UI State
   const [selectedPlan, setSelectedPlan] = useState('daily'); // 'daily', 'weekly', '15days'
@@ -108,6 +109,7 @@ const BikeDetailsPage = () => {
   useEffect(() => {
     const fetchBikeDetails = async () => {
       setLoading(true);
+      setBikeError(null);
       try {
         // Fetch current bike
         const res = await client.get(`/bikes/${id}`);
@@ -115,9 +117,16 @@ const BikeDetailsPage = () => {
 
         // Fetch all bikes for recommendations
         const allRes = await client.get('/bikes');
-        setAllBikes(allRes.data);
+        setAllBikes(Array.isArray(allRes.data) ? allRes.data : []);
       } catch (err) {
         console.error("Failed to load bike details:", err);
+        const msg =
+          err.response?.data?.detail ||
+          (err.code === 'ERR_NETWORK'
+            ? 'Network error: Cannot reach the backend API. Please verify backend deployment and connection.'
+            : err.message) ||
+          'Could not load bike details.';
+        setBikeError(msg);
         toast.error("Could not load bike details.");
       } finally {
         setLoading(false);
@@ -539,6 +548,22 @@ const BikeDetailsPage = () => {
           <div className="skeleton-img skeleton-shimmer" style={{ maxWidth: '800px', height: '360px', margin: '0 auto 24px auto' }}></div>
           <div className="skeleton-line skeleton-shimmer" style={{ width: '40%', height: '24px', margin: '0 auto 12px auto' }}></div>
           <div className="skeleton-line skeleton-shimmer" style={{ width: '20%', height: '18px', margin: '0 auto' }}></div>
+        </div>
+      </div>
+    );
+  }
+
+  if (bikeError) {
+    return (
+      <div className="bike-details-container">
+        <div className="bike-details-wrapper" style={{ padding: '80px 20px', textAlign: 'center' }}>
+          <AlertCircle size={48} style={{ color: '#ef4444', margin: '0 auto 16px' }} />
+          <h2>Unable to Load Vehicle</h2>
+          <p style={{ color: 'var(--text-muted)', marginBottom: '24px', maxWidth: '480px', margin: '0 auto 24px' }}>{bikeError}</p>
+          <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
+            <button onClick={() => window.location.reload()} className="btn-hero-primary">Retry</button>
+            <button onClick={() => navigate('/')} className="btn-hero-secondary">Back to Fleet</button>
+          </div>
         </div>
       </div>
     );

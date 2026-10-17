@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import client from '../api/client';
-import { CheckCircle2, ShieldCheck, UploadCloud, Bike as BikeIcon, X, ArrowLeft, Heart, Star, Check, ChevronDown } from 'lucide-react';
+import { CheckCircle2, ShieldCheck, UploadCloud, Bike as BikeIcon, X, ArrowLeft, Heart, Star, Check, ChevronDown, AlertCircle } from 'lucide-react';
 import '../Home.css'; // Import the new Home styles
 import Chatbot from '../components/Chatbot';
 import BikeImage from '../components/BikeImage';
@@ -16,6 +16,7 @@ const HomePage = () => {
   // State Management
   const [bikes, setBikes] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [fetchError, setFetchError] = useState(null);
 
   // New Filter States
   const [search, setSearch] = useState('');
@@ -239,6 +240,7 @@ const HomePage = () => {
   const fetchData = async () => {
     try {
       setLoading(true);
+      setFetchError(null);
       const resBikes = await client.get('/bikes');
       setBikes(Array.isArray(resBikes.data) ? resBikes.data : []);
 
@@ -255,7 +257,14 @@ const HomePage = () => {
       }
     } catch (err) {
       console.error("Error fetching homepage records:", err);
-      toast.error('Could not load bikes. Please refresh and try again.');
+      const errorMessage =
+        err.response?.data?.detail ||
+        (err.code === 'ERR_NETWORK'
+          ? 'Network error: Cannot reach the backend API. Please verify the backend deployment and connection.'
+          : err.message) ||
+        'Could not load bikes. Please refresh and try again.';
+      setFetchError(errorMessage);
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -708,6 +717,19 @@ const HomePage = () => {
                   </div>
                 </div>
               ))}
+            </div>
+          ) : fetchError ? (
+            <div className="bikes-empty-state bikes-error-state" style={{ borderColor: 'rgba(239, 68, 68, 0.25)', background: 'rgba(239, 68, 68, 0.04)' }}>
+              <AlertCircle size={44} className="empty-icon" style={{ color: '#ef4444' }} />
+              <h3>Failed to Load Fleet</h3>
+              <p style={{ maxWidth: '480px', margin: '8px auto 16px', color: 'var(--text-muted, #64748b)' }}>{fetchError}</p>
+              <button
+                onClick={fetchData}
+                className="btn-reset-filters"
+                style={{ background: 'var(--primary, #f97316)', color: '#fff', border: 'none', padding: '10px 22px', borderRadius: '8px', cursor: 'pointer', fontWeight: 600 }}
+              >
+                Retry Loading
+              </button>
             </div>
           ) : filteredBikes.length === 0 ? (
             <div className="bikes-empty-state">

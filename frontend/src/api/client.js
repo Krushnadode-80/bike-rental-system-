@@ -1,21 +1,47 @@
 import axios from 'axios';
 
-// Resolve API base URL dynamically based on environment, Vercel services binding, or local dev
+/**
+ * Determine the correct API base URL.
+ * 
+ * Rules:
+ * 1. Running in a browser on a deployed host (e.g. *.vercel.app, bike-rental-system-platform.vercel.app):
+ *    - If an external remote HTTPS API URL is provided via REACT_APP_API_BASE_URL (and NOT localhost/127.0.0.1), use it.
+ *    - Otherwise, use same-domain '/api'. Vercel rewrites will route /api/(.*) to the backend service.
+ *    - Localhost / 127.0.0.1 must NEVER be used on a deployed domain.
+ * 2. Running locally (localhost / 127.0.0.1):
+ *    - If REACT_APP_API_BASE_URL is provided, use it.
+ *    - Otherwise, default to 'http://localhost:8000/api' so all requests consistently target /api.
+ */
 const resolveBaseUrl = () => {
-  // 1. Bound internal service URL (injected by Vercel Services if running in server context)
-  if (typeof process !== 'undefined' && process.env?.BACKEND_URL) {
-    return process.env.BACKEND_URL;
+  const isBrowser = typeof window !== 'undefined' && Boolean(window.location);
+  const hostname = isBrowser ? window.location.hostname : '';
+  const isLocalDev = Boolean(
+    !hostname ||
+    hostname === 'localhost' ||
+    hostname === '127.0.0.1' ||
+    hostname === '0.0.0.0' ||
+    hostname.endsWith('.local')
+  );
+
+  const envUrl = (process.env.REACT_APP_API_BASE_URL || '').trim();
+
+  // Deployed production environment (e.g., Vercel)
+  if (isBrowser && !isLocalDev) {
+    if (envUrl && !envUrl.includes('localhost') && !envUrl.includes('127.0.0.1') && !envUrl.includes('0.0.0.0')) {
+      const trimmed = envUrl.replace(/\/+$/, '');
+      return trimmed.endsWith('/api') ? trimmed : `${trimmed}/api`;
+    }
+    // Same-origin relative API route proxied by Vercel rewrites to the FastAPI service
+    return '/api';
   }
-  // 2. Explicit REACT_APP_API_BASE_URL environment variable
-  if (process.env.REACT_APP_API_BASE_URL !== undefined) {
-    return process.env.REACT_APP_API_BASE_URL;
+
+  // Local development environment
+  if (envUrl) {
+    const trimmed = envUrl.replace(/\/+$/, '');
+    return trimmed.endsWith('/api') ? trimmed : `${trimmed}/api`;
   }
-  // 3. In browser production (Vercel deployment on same domain)
-  if (typeof window !== 'undefined' && window.location && window.location.hostname !== 'localhost') {
-    return ''; // Same-origin relative calls routed via Vercel /api rewrite
-  }
-  // 4. Default local development server
-  return 'http://localhost:8000';
+
+  return 'http://localhost:8000/api';
 };
 
 const API_BASE_URL = resolveBaseUrl();
@@ -27,29 +53,47 @@ const client = axios.create({
   },
 });
 
-// Helper for resolving image/media URLs without hardcoded hostnames
+/**
+ * Helper for resolving image/media URLs without hardcoded hostnames or breaking on localhost paths.
+ */
 export const getMediaUrl = (photoPath) => {
-  if (!photoPath) return null;
+  if (!photoPath || typeof photoPath !== 'string') return null;
+
+  // If already an absolute external URL (e.g. Cloudinary, Unsplash)
   if (photoPath.startsWith('http://') || photoPath.startsWith('https://')) {
+    // If it's a legacy hardcoded localhost/127.0.0.1 upload URL from local DB test records
+    if (photoPath.includes('localhost:8000') || photoPath.includes('127.0.0.1:8000')) {
+      const relative = photoPath.replace(/^https?:\/\/(?:localhost|127\.0\.0\.1):8000/, '');
+      const base = API_BASE_URL.replace(/\/api$/, '');
+      const cleanPath = relative.startsWith('/') ? relative : `/${relative}`;
+      return `${base}${cleanPath}`;
+    }
     return photoPath;
   }
-  const base = API_BASE_URL ? API_BASE_URL.replace(/\/api$/, '') : '';
+
+  const base = API_BASE_URL.replace(/\/api$/, '');
   const cleanPath = photoPath.startsWith('/') ? photoPath : `/${photoPath}`;
   return `${base}${cleanPath}`;
 };
 
-// Request interceptor to append JWT token and ensure /api routing prefix when calling same-origin
+// Request interceptor to append JWT token and sanitize URL path against duplicate /api prefixes
 client.interceptors.request.use(
   (config) => {
-    // When using same-origin base URL on Vercel, ensure the request has the /api prefix
-    if (!config.baseURL || config.baseURL === '' || config.baseURL === '/api' || config.baseURL.startsWith('/')) {
-      if (config.url && !config.url.startsWith('/api') && !config.url.startsWith('http')) {
-        config.url = `/api${config.url.startsWith('/') ? '' : '/'}${config.url}`;
-      }
-      if (config.url) {
-        config.url = config.url.replace(/^\/api\/api(\/|$)/, '/api$1');
+    // Normalize URL path to prevent duplicate /api prefixes if callers already prefix /api
+    if (config.url && typeof config.url === 'string') {
+      if (!config.url.startsWith('http://') && !config.url.startsWith('https://')) {
+        let cleanPath = config.url.startsWith('/') ? config.url : `/${config.url}`;
+        // Strip duplicate leading /api if present because baseURL already includes /api
+        if (cleanPath.startsWith('/api')) {
+          cleanPath = cleanPath.replace(/^(\/api)+/, '');
+          if (!cleanPath.startsWith('/')) {
+            cleanPath = `/${cleanPath}`;
+          }
+        }
+        config.url = cleanPath;
       }
     }
+
     const token = localStorage.getItem('token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
@@ -69,7 +113,7 @@ client.interceptors.response.use(
       // Clear auth local state and reload to force redirect to login
       localStorage.removeItem('token');
       localStorage.removeItem('user');
-      if (!window.location.pathname.includes('/login') && !window.location.pathname.includes('/register')) {
+      if (typeof window !== 'undefined' && !window.location.pathname.includes('/login') && !window.location.pathname.includes('/register')) {
         window.location.href = '/login';
       }
     }

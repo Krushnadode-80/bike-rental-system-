@@ -27,9 +27,6 @@ from routes.chat_routes import router as chat_router
 
 app = FastAPI()
 
-app.include_router(upload_router, prefix="/api")
-app.include_router(upload_router)
-
 
 def ensure_users_table_columns():
     inspector = inspect(engine)
@@ -126,12 +123,16 @@ def ensure_bookings_table_columns():
 # Add CORS Middleware
 origins = [
     "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+    "https://bike-rental-system-platform.vercel.app",
 ]
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
-    allow_origin_regex=r"https://bike-rental-system-.*\.vercel\.app",
+    allow_origin_regex=r"^https:\/\/.*\.vercel\.app$",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
